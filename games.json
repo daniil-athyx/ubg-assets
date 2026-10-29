@@ -1,4 +1,4 @@
-[
+﻿[
     {
         "name":  "2048",
         "path":  "2048.html",
@@ -433,5 +433,55 @@
         "name":  "Rodha",
         "path":  "Rodha.html",
         "icon":  "icons/rodha.png"
+    },
+    {
+        "path":  "REPO.html",
+        "name":  "R.E.P.O.",
+        "icon":  "icons/repo.jpg"
+    },
+    {
+        "path":  "Cuphead.html",
+        "name":  "Cuphead",
+        "icon":  "icons/cuphead.jpg"
+    },
+    {
+        "path":  "People Playground.html",
+        "name":  "People Playground",
+        "icon":  "icons/people_playground.jpg"
+    },
+    {
+        "path":  "Run 3.html",
+        "name":  "Run 3",
+        "icon":  "icons/run_3.png"
+    },
+    {
+        "path":  "Monkey Mart.html",
+        "name":  "Monkey Mart",
+        "icon":  "icons/monkey_mart.png"
+    },
+    {
+        "path":  "Vex 3.html",
+        "name":  "Vex 3",
+        "icon":  "icons/vex_3.png"
+    },
+    {
+        "path":  "Vex 4.html",
+        "name":  "Vex 4",
+        "icon":  "icons/vex_4.png"
+    },
+    {
+        "path":  "Vex 5.html",
+        "name":  "Vex 5",
+        "icon":  "icons/vex_5.jpeg"
+    },
+    {
+        "path":  "Vex 6.html",
+        "name":  "Vex 6",
+        "icon":  "icons/vex_6.png"
+    },
+    {
+        "path":  "Vex 7.html",
+        "name":  "Vex 7",
+        "icon":  "icons/vex_7.png"
     }
 ]
