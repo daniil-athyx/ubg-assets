@@ -428,5 +428,10 @@
         "name":  "Amanda the Adventurer",
         "path":  "amanda-the-adventurer.html",
         "icon":  "icons/amanda_the_adventurer.jpg"
+    },
+    {
+        "name":  "Rodha",
+        "path":  "Rodha.html",
+        "icon":  "icons/rodha.png"
     }
 ]
