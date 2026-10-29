@@ -378,5 +378,35 @@
     "name": "Drift Hunters",
     "path": "Drift Hunters.html",
     "icon": "icons/drift_hunters.png"
+  },
+  {
+    "name": "A Small World Cup",
+    "path": "A Small World Cup.html",
+    "icon": "icons/a_small_world_cup.png"
+  },
+  {
+    "name": "Neon Balls",
+    "path": "Neon Balls.html",
+    "icon": "icons/neon_balls.png"
+  },
+  {
+    "name": "NoomiClone",
+    "path": "NoomiClone.html",
+    "icon": "icons/noomi_clone.png"
+  },
+  {
+    "name": "Oneshot Royale",
+    "path": "Oneshot Royale.html",
+    "icon": "icons/oneshot_royale.jpg"
+  },
+  {
+    "name": "Plague Inc",
+    "path": "Plague Inc.html",
+    "icon": "icons/plague_inc.png"
+  },
+  {
+    "name": "Counter-Strike",
+    "path": "Counter-Strike.html",
+    "icon": "icons/counter_strike.jpg"
   }
 ]
