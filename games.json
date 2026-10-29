@@ -408,5 +408,10 @@
     "name": "Counter-Strike",
     "path": "Counter-Strike.html",
     "icon": "icons/counter_strike.jpg"
+  },
+  {
+    "name": "Schoolboy Runaway",
+    "path": "schoolboyrunaway.html",
+    "icon": "icons/schoolboy_runaway.jpg"
   }
 ]
