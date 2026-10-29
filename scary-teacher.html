@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Scary%20Teacher/" />
+    <title>Scary Teacher 3D</title>
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: black;
+      }
+
+      #unity-canvas {
+        width: 100vw;
+        height: 100vh;
+        display: block;
+      }
+
+      #loader {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: #0b0b0b;
+        color: white;
+        font-family: sans-serif;
+        z-index: 10;
+      }
+
+      #bar {
+        width: 60%;
+        height: 12px;
+        background: #333;
+      }
+
+      #fill {
+        height: 100%;
+        width: 0%;
+        background: #4caf50;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="loader">
+      <div id="text">0 MB / 68 MB</div>
+      <div id="bar">
+        <div id="fill"></div>
+      </div>
+    </div>
+
+    <canvas id="unity-canvas"></canvas>
+
+    <script>
+      window.PokiSDK = {
+        init: function () {
+          return Promise.resolve();
+        },
+        initWithVideoHB: function () {
+          return Promise.resolve();
+        },
+        commercialBreak: function () {
+          return Promise.resolve();
+        },
+        rewardedBreak: function () {
+          return Promise.resolve(true);
+        },
+        displayAd: function () {},
+        destroyAd: function () {},
+        gameLoadingStart: function () {},
+        gameLoadingProgress: function () {},
+        gameLoadingFinished: function () {},
+        gameplayStart: function () {},
+        gameplayStop: function () {},
+        happyTime: function () {},
+        setPlayerAge: function () {},
+        togglePlayerAdvertisingConsent: function () {},
+        logError: function () {},
+        sendHighscore: function () {},
+        setDebug: function () {},
+        setDebugTouchOverlayController: function () {},
+        shareableURL: function () {
+          return Promise.reject();
+        },
+        getURLParam: function () {
+          return "";
+        }
+      };
+
+      window.pokiReady = true;
+
+      window.initPokiBridge = function (n) {
+        window.pokiBridge = n;
+        if (!window.unityGame) {
+          return void setTimeout(function () {
+            window.initPokiBridge(n);
+          }, 100);
+        }
+        window.unityGame.SendMessage(n, "ready");
+
+        window.commercialBreak = function () {
+          window.unityGame.SendMessage(n, "commercialBreakCompleted");
+        };
+        window.rewardedBreak = function () {
+          window.unityGame.SendMessage(n, "rewardedBreakCompleted", "true");
+        };
+        window.shareableURL = function () {
+          window.unityGame.SendMessage(n, "shareableURLRejected");
+        };
+      };
+
+      const baseBuild = "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@7512192/Scary%20Teacher/Build/";
+      const base = "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@7512192/Scary%20Teacher/";
+      const loaderUrl = baseBuild + "d9d605cb1c18b4ed9fb179406f02ceab.loader.js";
+
+      const MAX_RETRIES = 3;
+      const RETRY_DELAY_MS = 1000;
+
+      const partProgress = new Map();
+      const totalGuess = 71000000;
+
+      function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+      }
+
+      function updateUI() {
+        let loaded = 0;
+        for (const v of partProgress.values()) loaded += v;
+        const mb = (loaded / 1024 / 1024).toFixed(1);
+        const total = (totalGuess / 1024 / 1024).toFixed(0);
+        document.getElementById("text").textContent = mb + " MB / " + total + " MB";
+        document.getElementById("fill").style.width = Math.min(100, (loaded / totalGuess) * 100) + "%";
+      }
+
+      async function readPartResponse(response, progressKey) {
+        const reader = response.body.getReader();
+        const chunks = [];
+        let received = 0;
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+          received += value.byteLength;
+          partProgress.set(progressKey, received);
+          updateUI();
+        }
+
+        const out = new Uint8Array(received);
+        let off = 0;
+        for (const chunk of chunks) {
+          out.set(chunk, off);
+          off += chunk.byteLength;
+        }
+        return out.buffer;
+      }
+
+      async function fetchPartWithRetry(url, retries = MAX_RETRIES) {
+        for (let attempt = 0; attempt <= retries; attempt++) {
+          try {
+            if (attempt > 0) {
+              partProgress.set(url, 0);
+              updateUI();
+            }
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("HTTP " + response.status + " for " + url);
+            return await readPartResponse(response, url);
+          } catch (err) {
+            if (attempt < retries) {
+              console.warn(`Retry ${attempt + 1}/${retries} for ${url}:`, err.message);
+              await sleep(RETRY_DELAY_MS * (attempt + 1));
+            } else {
+              throw new Error("Failed after " + (retries + 1) + " attempts: " + url);
+            }
+          }
+        }
+      }
+
+      const files = [
+        { name: "f757f610a3b427f7c09f76e8b179c827.wasm.unityweb", parts: 3 },
+        { name: "bb4366b251226bb5ba875ec4b277cdad.data.unityweb", parts: 2 }
+      ];
+
+      function buildUrls(file) {
+        const urls = [];
+        for (let i = 1; i <= file.parts; i++) {
+          urls.push(baseBuild + file.name + ".part" + i);
+        }
+        return urls;
+      }
+
+      async function loadFile(file) {
+        const urls = buildUrls(file);
+        const buffers = await Promise.all(urls.map((url) => fetchPartWithRetry(url)));
+        return new Blob(buffers);
+      }
+
+      async function ensureUnityLoader(url) {
+        if (typeof window.createUnityInstance === "function") return;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("Failed to load Unity loader (" + res.status + ")");
+        const code = await res.text();
+        (0, eval)(code);
+      }
+
+      async function start() {
+        const [wasmBlob, dataBlob] = await Promise.all([
+          loadFile(files[0]),
+          loadFile(files[1]),
+          ensureUnityLoader(loaderUrl)
+        ]);
+
+        const wasmUrl = URL.createObjectURL(wasmBlob);
+        const dataUrl = URL.createObjectURL(dataBlob);
+
+        document.getElementById("text").textContent = "Decompressing & starting game (may take 15-30s)...";
+
+        const instance = await window.createUnityInstance(
+          document.querySelector("#unity-canvas"),
+          {
+            dataUrl: dataUrl,
+            frameworkUrl: baseBuild + "cbb524c2a00b11e5a92cb4f5d5fee968.framework.js.unityweb",
+            codeUrl: wasmUrl,
+            streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Scary%20Teacher/StreamingAssets",
+            companyName: "znk",
+            productName: "Scary Teacher 3D",
+            productVersion: "1.0",
+            cacheControl: function () {
+              return "no-store";
+            }
+          },
+          function (progress) {
+            document.getElementById("fill").style.width = Math.min(100, progress * 100) + "%";
+          }
+        );
+
+        window.unityGame = instance;
+        document.getElementById("loader").style.display = "none";
+      }
+
+      start().catch(function (err) {
+        document.getElementById("text").textContent = "Error: " + err.message;
+        console.error(err);
+      });
+    </script>
+  </body>
+</html>

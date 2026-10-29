@@ -1,4 +1,4 @@
-﻿[
+[
     {
         "name":  "2048",
         "path":  "2048.html",
@@ -411,12 +411,12 @@
     },
     {
         "name":  "Schoolboy Runaway",
-        "path":  "schoolboyrunaway.html",
+        "path":  "schoolboy-runaway.html",
         "icon":  "icons/schoolboy_runaway.jpg"
     },
     {
         "name":  "Scary Teacher",
-        "path":  "Scary Teacher.html",
+        "path":  "scary-teacher.html",
         "icon":  "icons/scary_teacher.png"
     },
     {
@@ -426,7 +426,7 @@
     },
     {
         "name":  "Amanda the Adventurer",
-        "path":  "Amanda the Adventurer.html",
+        "path":  "amanda-the-adventurer.html",
         "icon":  "icons/amanda_the_adventurer.jpg"
     }
 ]
