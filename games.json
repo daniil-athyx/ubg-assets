@@ -5,9 +5,24 @@
         "icon":  "icons/2048.png"
     },
     {
+        "name":  "A Small World Cup",
+        "path":  "A Small World Cup.html",
+        "icon":  "icons/a_small_world_cup.png"
+    },
+    {
+        "name":  "Amanda the Adventurer",
+        "path":  "amanda-the-adventurer.html",
+        "icon":  "icons/amanda_the_adventurer.jpg"
+    },
+    {
         "name":  "Angry Birds",
         "path":  "Angry Birds.html",
         "icon":  "icons/angry_birds.png"
+    },
+    {
+        "name":  "Angry Neighbor",
+        "path":  "Angry Neighbor.html",
+        "icon":  "icons/angry_neighbor.png"
     },
     {
         "name":  "Bad Piggies",
@@ -20,14 +35,39 @@
         "icon":  "icons/baldis_basics.png"
     },
     {
+        "name":  "Baldi\u0027s Basics Plus",
+        "path":  "Baldi\u0027s Basics Plus.html",
+        "icon":  "icons/baldis_basics_plus.png"
+    },
+    {
+        "name":  "Baldi\u0027s Basics Remastered",
+        "path":  "Baldi\u0027s Basics Remastered.html",
+        "icon":  "icons/baldis_basics_remastered.png"
+    },
+    {
+        "name":  "Baldis Basics Squared",
+        "path":  "Baldi\u0027s Basics Squared.html",
+        "icon":  "icons/baldis_basics_squared.png"
+    },
+    {
         "name":  "Baldi\u0027s Basics: Ultra Decompile",
         "path":  "Baldi Ultra Decompile.html",
         "icon":  "icons/baldi_ultra_decompile.png"
     },
     {
+        "name":  "Baldi\u0027s Fun New School",
+        "path":  "Baldi\u0027s Fun New School.html",
+        "icon":  "icons/baldis_fun_new_school.png"
+    },
+    {
         "name":  "Basketball Stars",
         "path":  "Basketball Stars.html",
         "icon":  "icons/basketball_stars.png"
+    },
+    {
+        "path":  "Bendy and the Ink Machine.html",
+        "name":  "Bendy and the Ink Machine",
+        "icon":  "icons/bendy.jpg"
     },
     {
         "name":  "BitLife",
@@ -45,6 +85,11 @@
         "icon":  "icons/bloxorz.png"
     },
     {
+        "name":  "Bottle Flip 3D",
+        "path":  "Bottle Flip 3D.html",
+        "icon":  "icons/bottle_flip_3d.jpg"
+    },
+    {
         "name":  "Bowmasters",
         "path":  "Bow Masters.html",
         "icon":  "icons/bow_masters.png"
@@ -53,6 +98,21 @@
         "name":  "Brawl Stars",
         "path":  "Brawl Stars.html",
         "icon":  "icons/brawl_stars.png"
+    },
+    {
+        "name":  "Buckshot Roulette",
+        "path":  "Buckshot Roulette.html",
+        "icon":  "icons/buckshot_roulette.png"
+    },
+    {
+        "name":  "Candy Jump",
+        "path":  "Candy Jump.html",
+        "icon":  "icons/candy_jump.jpg"
+    },
+    {
+        "name":  "Caseohs Basics",
+        "path":  "Caseoh\u0027s Basics in eating and fastfood.html",
+        "icon":  "icons/caseohs_basics.png"
     },
     {
         "name":  "Chrome Dino",
@@ -70,9 +130,29 @@
         "icon":  "icons/cookie_clicker.png"
     },
     {
+        "name":  "Counter-Strike",
+        "path":  "Counter-Strike.html",
+        "icon":  "icons/counter_strike.jpg"
+    },
+    {
         "name":  "Crossy Road",
         "path":  "Crossy Road.html",
         "icon":  "icons/crossy_road.png"
+    },
+    {
+        "path":  "Cuphead.html",
+        "name":  "Cuphead",
+        "icon":  "icons/cuphead.jpg"
+    },
+    {
+        "name":  "Deltarune",
+        "path":  "Deltarune.html",
+        "icon":  "icons/deltarune.png"
+    },
+    {
+        "name":  "Doki Doki Literature Club",
+        "path":  "Doki Doki Literature Club.html",
+        "icon":  "icons/doki_doki_literature_club.png"
     },
     {
         "name":  "Doodle Jump",
@@ -90,9 +170,54 @@
         "icon":  "icons/drift_boss.png"
     },
     {
+        "name":  "Drift Hunters",
+        "path":  "Drift Hunters.html",
+        "icon":  "icons/drift_hunters.png"
+    },
+    {
         "name":  "Duck Life",
         "path":  "Duck Life.html",
         "icon":  "icons/duck_life.png"
+    },
+    {
+        "path":  "Duck Life 2.html",
+        "name":  "Duck Life 2",
+        "icon":  "icons/duck_life_2.jpg"
+    },
+    {
+        "path":  "Duck Life 3.html",
+        "name":  "Duck Life 3",
+        "icon":  "icons/duck_life_3.jpg"
+    },
+    {
+        "path":  "Duck Life 4.html",
+        "name":  "Duck Life 4",
+        "icon":  "icons/duck_life_4.jpg"
+    },
+    {
+        "path":  "Duck Life 5.html",
+        "name":  "Duck Life 5",
+        "icon":  "icons/duck_life_5.jpg"
+    },
+    {
+        "path":  "Fireboy and Watergirl 1.html",
+        "name":  "Fireboy and Watergirl 1: Forest Temple",
+        "icon":  "icons/fireboy_watergirl_1.jpg"
+    },
+    {
+        "path":  "Fireboy and Watergirl 2.html",
+        "name":  "Fireboy and Watergirl 2: Light Temple",
+        "icon":  "icons/fireboy_watergirl_2.jpeg"
+    },
+    {
+        "path":  "Fireboy and Watergirl 3.html",
+        "name":  "Fireboy and Watergirl 3: Ice Temple",
+        "icon":  "icons/fireboy_watergirl_3.jpg"
+    },
+    {
+        "path":  "Fireboy and Watergirl 4.html",
+        "name":  "Fireboy and Watergirl 4: Crystal Temple",
+        "icon":  "icons/fireboy_watergirl_4.jpeg"
     },
     {
         "name":  "Five Nights at Epstein\u0027s",
@@ -110,6 +235,16 @@
         "icon":  "icons/fnaf2.png"
     },
     {
+        "name":  "Five Nights at Freddy\u0027s 3",
+        "path":  "Five Nights At Freddys 3.html",
+        "icon":  "icons/fnaf3.png"
+    },
+    {
+        "name":  "Five Nights at Freddy\u0027s 4",
+        "path":  "Five Nights At Freddys 4.html",
+        "icon":  "icons/fnaf4.png"
+    },
+    {
         "name":  "Geometry Dash",
         "path":  "Geometry Dash.html",
         "icon":  "icons/geometry_dash.svg"
@@ -120,14 +255,69 @@
         "icon":  "icons/granny.png"
     },
     {
+        "path":  "Granny 2.html",
+        "name":  "Granny 2",
+        "icon":  "icons/granny_2.jpg"
+    },
+    {
+        "name":  "Happy Wheels",
+        "path":  "Happy Wheels.html",
+        "icon":  "icons/happy_wheels.png"
+    },
+    {
         "name":  "Helix Jump",
         "path":  "Helix Jump.html",
         "icon":  "icons/helix_jump.png"
     },
     {
+        "path":  "Breaking the Bank.html",
+        "name":  "Henry Stickmin: Breaking the Bank",
+        "icon":  "icons/breaking_the_bank.jpg"
+    },
+    {
+        "path":  "Crossing the Pit.html",
+        "name":  "Henry Stickmin: Crossing the Pit",
+        "icon":  "icons/crossing_the_pit.jpg"
+    },
+    {
+        "path":  "Escaping the Prison.html",
+        "name":  "Henry Stickmin: Escaping the Prison",
+        "icon":  "icons/escaping_the_prison.jpg"
+    },
+    {
+        "path":  "Fleeing the Complex.html",
+        "name":  "Henry Stickmin: Fleeing the Complex",
+        "icon":  "icons/fleeing_the_complex.jpg"
+    },
+    {
+        "path":  "Infiltrating the Airship.html",
+        "name":  "Henry Stickmin: Infiltrating the Airship",
+        "icon":  "icons/infiltrating_the_airship.jpg"
+    },
+    {
+        "path":  "Stealing the Diamond.html",
+        "name":  "Henry Stickmin: Stealing the Diamond",
+        "icon":  "icons/stealing_the_diamond.jpg"
+    },
+    {
+        "name":  "Hollow Knight Silksong",
+        "path":  "Hollow Knight Silksong.html",
+        "icon":  "icons/hollow_knight_silksong.png"
+    },
+    {
         "name":  "Hypper Sandbox",
         "path":  "Hypper Sandbox.html",
         "icon":  "icons/hypper_sandbox.png"
+    },
+    {
+        "path":  "Ink Game.html",
+        "name":  "Ink Game",
+        "icon":  "icons/ink_game.png"
+    },
+    {
+        "path":  "Jetpack Joyride.html",
+        "name":  "Jetpack Joyride",
+        "icon":  "icons/jetpack_joyride.jpg"
     },
     {
         "name":  "Just Fall.LOL",
@@ -140,9 +330,29 @@
         "icon":  "icons/minecraft.png"
     },
     {
+        "path":  "MiSide.html",
+        "name":  "MiSide",
+        "icon":  "icons/miside.jpg"
+    },
+    {
+        "path":  "Monkey Mart.html",
+        "name":  "Monkey Mart",
+        "icon":  "icons/monkey_mart.png"
+    },
+    {
         "name":  "Moto X3M",
         "path":  "Moto X3m.html",
         "icon":  "icons/moto_x3m.png"
+    },
+    {
+        "name":  "Neon Balls",
+        "path":  "Neon Balls.html",
+        "icon":  "icons/neon_balls.png"
+    },
+    {
+        "name":  "NoomiClone",
+        "path":  "NoomiClone.html",
+        "icon":  "icons/noomi_clone.png"
     },
     {
         "name":  "Obby 99% Will Lose",
@@ -150,9 +360,104 @@
         "icon":  "icons/obby.png"
     },
     {
+        "name":  "Oneshot Royale",
+        "path":  "Oneshot Royale.html",
+        "icon":  "icons/oneshot_royale.jpg"
+    },
+    {
+        "name":  "Osu",
+        "path":  "Osu.html",
+        "icon":  "icons/osu.png"
+    },
+    {
         "name":  "OvO",
         "path":  "OvO.html",
         "icon":  "icons/ovo.png"
+    },
+    {
+        "path":  "Papa Louie.html",
+        "name":  "Papa Louie",
+        "icon":  "icons/papa_louie.jpg"
+    },
+    {
+        "path":  "Papa Louie 2.html",
+        "name":  "Papa Louie 2",
+        "icon":  "icons/papa_louie_2.jpg"
+    },
+    {
+        "path":  "Papa Louie 3.html",
+        "name":  "Papa Louie 3",
+        "icon":  "icons/papa_louie_3.jpg"
+    },
+    {
+        "path":  "Papa\u0027s Bakeria.html",
+        "name":  "Papa\u0027s Bakeria",
+        "icon":  "icons/papas_bakeria.jpg"
+    },
+    {
+        "path":  "Papa\u0027s Burgeria.html",
+        "name":  "Papa\u0027s Burgeria",
+        "icon":  "icons/papas_burgeria.jpg"
+    },
+    {
+        "path":  "Papa\u0027s Cheeseria.html",
+        "name":  "Papa\u0027s Cheeseria",
+        "icon":  "icons/papas_cheeseria.jpg"
+    },
+    {
+        "path":  "Papa\u0027s Cupcakeria.html",
+        "name":  "Papa\u0027s Cupcakeria",
+        "icon":  "icons/papas_cupcakeria.jpg"
+    },
+    {
+        "path":  "Papa\u0027s Donuteria.html",
+        "name":  "Papa\u0027s Donuteria",
+        "icon":  "icons/papas_donuteria.jpg"
+    },
+    {
+        "path":  "Papa\u0027s Freezeria.html",
+        "name":  "Papa\u0027s Freezeria",
+        "icon":  "icons/papas_freezeria.jpg"
+    },
+    {
+        "path":  "Papa\u0027s Hot Doggeria.html",
+        "name":  "Papa\u0027s Hot Doggeria",
+        "icon":  "icons/papas_hot_doggeria.jpg"
+    },
+    {
+        "path":  "Papa\u0027s Pancakeria.html",
+        "name":  "Papa\u0027s Pancakeria",
+        "icon":  "icons/papas_pancakeria.jpg"
+    },
+    {
+        "path":  "Papa\u0027s Pastaria.html",
+        "name":  "Papa\u0027s Pastaria",
+        "icon":  "icons/papas_pastaria.jpg"
+    },
+    {
+        "path":  "Papa\u0027s Pizzeria.html",
+        "name":  "Papa\u0027s Pizzeria",
+        "icon":  "icons/papas_pizzeria.jpg"
+    },
+    {
+        "path":  "Papa\u0027s Scooperia.html",
+        "name":  "Papa\u0027s Scooperia",
+        "icon":  "icons/papas_scooperia.jpg"
+    },
+    {
+        "path":  "Papa\u0027s Sushiria.html",
+        "name":  "Papa\u0027s Sushiria",
+        "icon":  "icons/papas_sushiria.jpg"
+    },
+    {
+        "path":  "Papa\u0027s Taco Mia.html",
+        "name":  "Papa\u0027s Taco Mia",
+        "icon":  "icons/papas_taco_mia.jpg"
+    },
+    {
+        "path":  "Papa\u0027s Wingeria.html",
+        "name":  "Papa\u0027s Wingeria",
+        "icon":  "icons/papas_wingeria.jpg"
     },
     {
         "name":  "Paper.io 2",
@@ -160,14 +465,49 @@
         "icon":  "icons/paper_io.png"
     },
     {
+        "path":  "People Playground.html",
+        "name":  "People Playground",
+        "icon":  "icons/people_playground.jpg"
+    },
+    {
+        "name":  "Plague Inc",
+        "path":  "Plague Inc.html",
+        "icon":  "icons/plague_inc.png"
+    },
+    {
         "name":  "Plants vs. Zombies",
         "path":  "Plants VS Zombies.html",
         "icon":  "icons/pvz.png"
     },
     {
+        "name":  "Polytrack",
+        "path":  "Polytrack.html",
+        "icon":  "icons/polytrack.png"
+    },
+    {
+        "path":  "REPO.html",
+        "name":  "R.E.P.O.",
+        "icon":  "icons/repo.jpg"
+    },
+    {
+        "name":  "Ragdoll Archers",
+        "path":  "Ragdoll Archers.html",
+        "icon":  "icons/ragdoll_archers.png"
+    },
+    {
+        "name":  "Ragdoll Hit",
+        "path":  "Ragdoll hit.html",
+        "icon":  "icons/ragdoll_hit.png"
+    },
+    {
         "name":  "Raldi\u0027s Crackhouse",
         "path":  "Raldis Crackhouse.html",
         "icon":  "icons/raldis_crackhouse.png"
+    },
+    {
+        "name":  "Real Gangster Crime",
+        "path":  "Real Gangster Crime.html",
+        "icon":  "icons/real_gangster_crime.jpg"
     },
     {
         "name":  "Red Ball 4",
@@ -195,6 +535,46 @@
         "icon":  "icons/riddle_school_3.png"
     },
     {
+        "path":  "Riddle School 4.html",
+        "name":  "Riddle School 4",
+        "icon":  "icons/riddle_school_4.jpg"
+    },
+    {
+        "path":  "Riddle School 5.html",
+        "name":  "Riddle School 5",
+        "icon":  "icons/riddle_school_5.jpg"
+    },
+    {
+        "path":  "Riddle Transfer.html",
+        "name":  "Riddle Transfer",
+        "icon":  "icons/riddle_transfer.jpg"
+    },
+    {
+        "path":  "Riddle Transfer 2.html",
+        "name":  "Riddle Transfer 2",
+        "icon":  "icons/riddle_transfer_2.jpg"
+    },
+    {
+        "name":  "Rodha",
+        "path":  "Rodha.html",
+        "icon":  "icons/rodha.png"
+    },
+    {
+        "path":  "Run 3.html",
+        "name":  "Run 3",
+        "icon":  "icons/run_3.png"
+    },
+    {
+        "name":  "Scary Teacher",
+        "path":  "scary-teacher.html",
+        "icon":  "icons/scary_teacher.png"
+    },
+    {
+        "name":  "Schoolboy Runaway",
+        "path":  "schoolboy-runaway.html",
+        "icon":  "icons/schoolboy_runaway.jpg"
+    },
+    {
         "name":  "Slope 2",
         "path":  "Slope 2.html",
         "icon":  "icons/slope_2.png"
@@ -215,9 +595,24 @@
         "icon":  "icons/soccer_random.png"
     },
     {
+        "name":  "Space Waves",
+        "path":  "Space Waves.html",
+        "icon":  "icons/space_waves.png"
+    },
+    {
+        "name":  "Spacebar Clicker",
+        "path":  "Spacebar Clicker.html",
+        "icon":  "icons/spacebar_clicker.png"
+    },
+    {
         "name":  "Subway Surfers: St. Petersburg",
         "path":  "Subway Surfers: St .Petersburg.html",
         "icon":  "icons/subway_surfers.png"
+    },
+    {
+        "name":  "Super Mario 64",
+        "path":  "Super Mario 64.html",
+        "icon":  "icons/super_mario_64.png"
     },
     {
         "name":  "Super Mario Bros",
@@ -228,6 +623,16 @@
         "name":  "Surf GO",
         "path":  "Surf Go.html",
         "icon":  "icons/surf_go.png"
+    },
+    {
+        "name":  "Tag",
+        "path":  "Tag.html",
+        "icon":  "icons/tag.png"
+    },
+    {
+        "path":  "Terraria.html",
+        "name":  "Terraria",
+        "icon":  "icons/terraria.jpg"
     },
     {
         "name":  "The Impossible Quiz",
@@ -250,214 +655,9 @@
         "icon":  "icons/undertale_yellow.png"
     },
     {
-        "name":  "Volley Random",
-        "path":  "Volley Random.html",
-        "icon":  "icons/volley_random.png"
-    },
-    {
-        "name":  "Wordle",
-        "path":  "Wordle.html",
-        "icon":  "icons/wordle.png"
-    },
-    {
-        "name":  "Baldi\u0027s Fun New School",
-        "path":  "Baldi\u0027s Fun New School.html",
-        "icon":  "icons/baldis_fun_new_school.png"
-    },
-    {
-        "name":  "Baldi\u0027s Basics Plus",
-        "path":  "Baldi\u0027s Basics Plus.html",
-        "icon":  "icons/baldis_basics_plus.png"
-    },
-    {
-        "name":  "Space Waves",
-        "path":  "Space Waves.html",
-        "icon":  "icons/space_waves.png"
-    },
-    {
-        "name":  "Baldi\u0027s Basics Remastered",
-        "path":  "Baldi\u0027s Basics Remastered.html",
-        "icon":  "icons/baldis_basics_remastered.png"
-    },
-    {
-        "name":  "Tag",
-        "path":  "Tag.html",
-        "icon":  "icons/tag.png"
-    },
-    {
-        "name":  "Hollow Knight Silksong",
-        "path":  "Hollow Knight Silksong.html",
-        "icon":  "icons/hollow_knight_silksong.png"
-    },
-    {
-        "name":  "Caseohs Basics",
-        "path":  "Caseoh\u0027s Basics in eating and fastfood.html",
-        "icon":  "icons/caseohs_basics.png"
-    },
-    {
-        "name":  "Angry Neighbor",
-        "path":  "Angry Neighbor.html",
-        "icon":  "icons/angry_neighbor.png"
-    },
-    {
-        "name":  "Candy Jump",
-        "path":  "Candy Jump.html",
-        "icon":  "icons/candy_jump.jpg"
-    },
-    {
-        "name":  "Baldis Basics Squared",
-        "path":  "Baldi\u0027s Basics Squared.html",
-        "icon":  "icons/baldis_basics_squared.png"
-    },
-    {
-        "name":  "Bottle Flip 3D",
-        "path":  "Bottle Flip 3D.html",
-        "icon":  "icons/bottle_flip_3d.jpg"
-    },
-    {
-        "name":  "Real Gangster Crime",
-        "path":  "Real Gangster Crime.html",
-        "icon":  "icons/real_gangster_crime.jpg"
-    },
-    {
-        "name":  "Buckshot Roulette",
-        "path":  "Buckshot Roulette.html",
-        "icon":  "icons/buckshot_roulette.png"
-    },
-    {
-        "name":  "Five Nights at Freddy\u0027s 3",
-        "path":  "Five Nights At Freddys 3.html",
-        "icon":  "icons/fnaf3.png"
-    },
-    {
-        "name":  "Five Nights at Freddy\u0027s 4",
-        "path":  "Five Nights At Freddys 4.html",
-        "icon":  "icons/fnaf4.png"
-    },
-    {
-        "name":  "Happy Wheels",
-        "path":  "Happy Wheels.html",
-        "icon":  "icons/happy_wheels.png"
-    },
-    {
-        "name":  "Ragdoll Archers",
-        "path":  "Ragdoll Archers.html",
-        "icon":  "icons/ragdoll_archers.png"
-    },
-    {
         "name":  "Undertale: Last Breath",
         "path":  "Undertale: Last Breath.html",
         "icon":  "icons/undertale_last_breath.png"
-    },
-    {
-        "name":  "Deltarune",
-        "path":  "Deltarune.html",
-        "icon":  "icons/deltarune.png"
-    },
-    {
-        "name":  "Ragdoll Hit",
-        "path":  "Ragdoll hit.html",
-        "icon":  "icons/ragdoll_hit.png"
-    },
-    {
-        "name":  "Osu",
-        "path":  "Osu.html",
-        "icon":  "icons/osu.png"
-    },
-    {
-        "name":  "Spacebar Clicker",
-        "path":  "Spacebar Clicker.html",
-        "icon":  "icons/spacebar_clicker.png"
-    },
-    {
-        "name":  "Polytrack",
-        "path":  "Polytrack.html",
-        "icon":  "icons/polytrack.png"
-    },
-    {
-        "name":  "Drift Hunters",
-        "path":  "Drift Hunters.html",
-        "icon":  "icons/drift_hunters.png"
-    },
-    {
-        "name":  "A Small World Cup",
-        "path":  "A Small World Cup.html",
-        "icon":  "icons/a_small_world_cup.png"
-    },
-    {
-        "name":  "Neon Balls",
-        "path":  "Neon Balls.html",
-        "icon":  "icons/neon_balls.png"
-    },
-    {
-        "name":  "NoomiClone",
-        "path":  "NoomiClone.html",
-        "icon":  "icons/noomi_clone.png"
-    },
-    {
-        "name":  "Oneshot Royale",
-        "path":  "Oneshot Royale.html",
-        "icon":  "icons/oneshot_royale.jpg"
-    },
-    {
-        "name":  "Plague Inc",
-        "path":  "Plague Inc.html",
-        "icon":  "icons/plague_inc.png"
-    },
-    {
-        "name":  "Counter-Strike",
-        "path":  "Counter-Strike.html",
-        "icon":  "icons/counter_strike.jpg"
-    },
-    {
-        "name":  "Schoolboy Runaway",
-        "path":  "schoolboy-runaway.html",
-        "icon":  "icons/schoolboy_runaway.jpg"
-    },
-    {
-        "name":  "Scary Teacher",
-        "path":  "scary-teacher.html",
-        "icon":  "icons/scary_teacher.png"
-    },
-    {
-        "name":  "Super Mario 64",
-        "path":  "Super Mario 64.html",
-        "icon":  "icons/super_mario_64.png"
-    },
-    {
-        "name":  "Amanda the Adventurer",
-        "path":  "amanda-the-adventurer.html",
-        "icon":  "icons/amanda_the_adventurer.jpg"
-    },
-    {
-        "name":  "Rodha",
-        "path":  "Rodha.html",
-        "icon":  "icons/rodha.png"
-    },
-    {
-        "path":  "REPO.html",
-        "name":  "R.E.P.O.",
-        "icon":  "icons/repo.jpg"
-    },
-    {
-        "path":  "Cuphead.html",
-        "name":  "Cuphead",
-        "icon":  "icons/cuphead.jpg"
-    },
-    {
-        "path":  "People Playground.html",
-        "name":  "People Playground",
-        "icon":  "icons/people_playground.jpg"
-    },
-    {
-        "path":  "Run 3.html",
-        "name":  "Run 3",
-        "icon":  "icons/run_3.png"
-    },
-    {
-        "path":  "Monkey Mart.html",
-        "name":  "Monkey Mart",
-        "icon":  "icons/monkey_mart.png"
     },
     {
         "path":  "Vex 3.html",
@@ -485,213 +685,18 @@
         "icon":  "icons/vex_7.png"
     },
     {
-        "path":  "Bendy and the Ink Machine.html",
-        "name":  "Bendy and the Ink Machine",
-        "icon":  "icons/bendy.jpg"
+        "name":  "Volley Random",
+        "path":  "Volley Random.html",
+        "icon":  "icons/volley_random.png"
     },
     {
-        "path":  "Ink Game.html",
-        "name":  "Ink Game",
-        "icon":  "icons/ink_game.png"
-    },
-    {
-        "path":  "Terraria.html",
-        "name":  "Terraria",
-        "icon":  "icons/terraria.jpg"
-    },
-    {
-        "path":  "MiSide.html",
-        "name":  "MiSide",
-        "icon":  "icons/miside.jpg"
+        "name":  "Wordle",
+        "path":  "Wordle.html",
+        "icon":  "icons/wordle.png"
     },
     {
         "path":  "Yandere Simulator.html",
         "name":  "Yandere Simulator",
         "icon":  "icons/yandere_simulator.png"
-    },
-    {
-        "path":  "Granny 2.html",
-        "name":  "Granny 2",
-        "icon":  "icons/granny_2.jpg"
-    },
-    {
-        "path":  "Jetpack Joyride.html",
-        "name":  "Jetpack Joyride",
-        "icon":  "icons/jetpack_joyride.jpg"
-    },
-    {
-        "path":  "Papa\u0027s Pizzeria.html",
-        "name":  "Papa\u0027s Pizzeria",
-        "icon":  "icons/papas_pizzeria.jpg"
-    },
-    {
-        "path":  "Papa\u0027s Burgeria.html",
-        "name":  "Papa\u0027s Burgeria",
-        "icon":  "icons/papas_burgeria.jpg"
-    },
-    {
-        "path":  "Papa\u0027s Freezeria.html",
-        "name":  "Papa\u0027s Freezeria",
-        "icon":  "icons/papas_freezeria.jpg"
-    },
-    {
-        "path":  "Papa\u0027s Pancakeria.html",
-        "name":  "Papa\u0027s Pancakeria",
-        "icon":  "icons/papas_pancakeria.jpg"
-    },
-    {
-        "path":  "Papa\u0027s Hot Doggeria.html",
-        "name":  "Papa\u0027s Hot Doggeria",
-        "icon":  "icons/papas_hot_doggeria.jpg"
-    },
-    {
-        "path":  "Papa\u0027s Taco Mia.html",
-        "name":  "Papa\u0027s Taco Mia",
-        "icon":  "icons/papas_taco_mia.jpg"
-    },
-    {
-        "path":  "Papa\u0027s Wingeria.html",
-        "name":  "Papa\u0027s Wingeria",
-        "icon":  "icons/papas_wingeria.jpg"
-    },
-    {
-        "path":  "Papa\u0027s Donuteria.html",
-        "name":  "Papa\u0027s Donuteria",
-        "icon":  "icons/papas_donuteria.jpg"
-    },
-    {
-        "path":  "Papa\u0027s Pastaria.html",
-        "name":  "Papa\u0027s Pastaria",
-        "icon":  "icons/papas_pastaria.jpg"
-    },
-    {
-        "path":  "Papa\u0027s Sushiria.html",
-        "name":  "Papa\u0027s Sushiria",
-        "icon":  "icons/papas_sushiria.jpg"
-    },
-    {
-        "path":  "Papa\u0027s Bakeria.html",
-        "name":  "Papa\u0027s Bakeria",
-        "icon":  "icons/papas_bakeria.jpg"
-    },
-    {
-        "path":  "Papa\u0027s Cheeseria.html",
-        "name":  "Papa\u0027s Cheeseria",
-        "icon":  "icons/papas_cheeseria.jpg"
-    },
-    {
-        "path":  "Papa\u0027s Cupcakeria.html",
-        "name":  "Papa\u0027s Cupcakeria",
-        "icon":  "icons/papas_cupcakeria.jpg"
-    },
-    {
-        "path":  "Papa\u0027s Scooperia.html",
-        "name":  "Papa\u0027s Scooperia",
-        "icon":  "icons/papas_scooperia.jpg"
-    },
-    {
-        "path":  "Papa Louie.html",
-        "name":  "Papa Louie",
-        "icon":  "icons/papa_louie.jpg"
-    },
-    {
-        "path":  "Papa Louie 2.html",
-        "name":  "Papa Louie 2",
-        "icon":  "icons/papa_louie_2.jpg"
-    },
-    {
-        "path":  "Papa Louie 3.html",
-        "name":  "Papa Louie 3",
-        "icon":  "icons/papa_louie_3.jpg"
-    },
-    {
-        "path":  "Fireboy and Watergirl 1.html",
-        "name":  "Fireboy and Watergirl 1: Forest Temple",
-        "icon":  "icons/fireboy_watergirl_1.jpg"
-    },
-    {
-        "path":  "Fireboy and Watergirl 2.html",
-        "name":  "Fireboy and Watergirl 2: Light Temple",
-        "icon":  "icons/fireboy_watergirl_2.jpeg"
-    },
-    {
-        "path":  "Fireboy and Watergirl 3.html",
-        "name":  "Fireboy and Watergirl 3: Ice Temple",
-        "icon":  "icons/fireboy_watergirl_3.jpg"
-    },
-    {
-        "path":  "Fireboy and Watergirl 4.html",
-        "name":  "Fireboy and Watergirl 4: Crystal Temple",
-        "icon":  "icons/fireboy_watergirl_4.jpeg"
-    },
-    {
-        "path":  "Breaking the Bank.html",
-        "name":  "Henry Stickmin: Breaking the Bank",
-        "icon":  "icons/breaking_the_bank.jpg"
-    },
-    {
-        "path":  "Escaping the Prison.html",
-        "name":  "Henry Stickmin: Escaping the Prison",
-        "icon":  "icons/escaping_the_prison.jpg"
-    },
-    {
-        "path":  "Stealing the Diamond.html",
-        "name":  "Henry Stickmin: Stealing the Diamond",
-        "icon":  "icons/stealing_the_diamond.jpg"
-    },
-    {
-        "path":  "Infiltrating the Airship.html",
-        "name":  "Henry Stickmin: Infiltrating the Airship",
-        "icon":  "icons/infiltrating_the_airship.jpg"
-    },
-    {
-        "path":  "Fleeing the Complex.html",
-        "name":  "Henry Stickmin: Fleeing the Complex",
-        "icon":  "icons/fleeing_the_complex.jpg"
-    },
-    {
-        "path":  "Crossing the Pit.html",
-        "name":  "Henry Stickmin: Crossing the Pit",
-        "icon":  "icons/crossing_the_pit.jpg"
-    },
-    {
-        "path":  "Duck Life 2.html",
-        "name":  "Duck Life 2",
-        "icon":  "icons/duck_life_2.jpg"
-    },
-    {
-        "path":  "Duck Life 3.html",
-        "name":  "Duck Life 3",
-        "icon":  "icons/duck_life_3.jpg"
-    },
-    {
-        "path":  "Duck Life 4.html",
-        "name":  "Duck Life 4",
-        "icon":  "icons/duck_life_4.jpg"
-    },
-    {
-        "path":  "Duck Life 5.html",
-        "name":  "Duck Life 5",
-        "icon":  "icons/duck_life_5.jpg"
-    },
-    {
-        "path":  "Riddle School 4.html",
-        "name":  "Riddle School 4",
-        "icon":  "icons/riddle_school_4.jpg"
-    },
-    {
-        "path":  "Riddle School 5.html",
-        "name":  "Riddle School 5",
-        "icon":  "icons/riddle_school_5.jpg"
-    },
-    {
-        "path":  "Riddle Transfer.html",
-        "name":  "Riddle Transfer",
-        "icon":  "icons/riddle_transfer.jpg"
-    },
-    {
-        "path":  "Riddle Transfer 2.html",
-        "name":  "Riddle Transfer 2",
-        "icon":  "icons/riddle_transfer_2.jpg"
     }
 ]
