@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-	<base href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Terraria/">
+	<base href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Terraria/">
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Terraria</title>
@@ -29,7 +29,7 @@
 	<div id="app"></div>
 	<canvas id="canvas" style="width: 100%"></canvas>
 	<script type="module">
-		const BASE = "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Terraria/";
+		const BASE = "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Terraria/";
 		const origFetch = window.fetch.bind(window);
 		window.fetch = function(input, init) {
 			if (typeof input === "string" && !input.startsWith("http") && !input.startsWith("blob:") && !input.startsWith("data:")) {

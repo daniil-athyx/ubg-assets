@@ -2,7 +2,7 @@
 <html lang="en-us">
 
 <head>
-    <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Amanda%20the%20Adventurer/">
+    <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Amanda%20the%20Adventurer/">
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Amanda The Adventurer</title>
@@ -244,7 +244,7 @@
             return originalFetch(...args);
         };
 
-        var baseCdn = "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Amanda%20the%20Adventurer/";
+        var baseCdn = "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Amanda%20the%20Adventurer/";
         Promise.all([
             mergeFiles(getParts(baseCdn + "Build/Build.wasm", 1, 4), "application/wasm"),
             mergeFiles(getParts(baseCdn + "Build/Build.data", 1, 63)),
@@ -264,7 +264,7 @@
                 dataUrl: dataUrl,
                 frameworkUrl: buildUrl + "/Build.framework.js",
                 codeUrl: wasmUrl,
-                streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Amanda%20the%20Adventurer/StreamingAssets",
+                streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Amanda%20the%20Adventurer/StreamingAssets",
                 companyName: "MangledMaw",
                 productName: "Amanda The Adventurer",
                 productVersion: "1.6.17b",

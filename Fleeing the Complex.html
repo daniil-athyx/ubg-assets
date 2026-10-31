@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-  <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Fleeing%20the%20Complex/">
+  <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Fleeing%20the%20Complex/">
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -79,7 +79,7 @@
         player.style.height = "100%";
         container.appendChild(player);
 
-        var partUrls = ['https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Fleeing%20the%20Complex/fleeingthecomplex.swf.part1', 'https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Fleeing%20the%20Complex/fleeingthecomplex.swf.part2', 'https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Fleeing%20the%20Complex/fleeingthecomplex.swf.part3']; var bufs = await Promise.all(partUrls.map(function(u) { return fetch(u).then(function(r) { return r.arrayBuffer(); }); })); var swfBuf = await (new Blob(bufs)).arrayBuffer();
+        var partUrls = ['https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Fleeing%20the%20Complex/fleeingthecomplex.swf.part1', 'https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Fleeing%20the%20Complex/fleeingthecomplex.swf.part2', 'https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Fleeing%20the%20Complex/fleeingthecomplex.swf.part3']; var bufs = await Promise.all(partUrls.map(function(u) { return fetch(u).then(function(r) { return r.arrayBuffer(); }); })); var swfBuf = await (new Blob(bufs)).arrayBuffer();
         if (loadingMsg) loadingMsg.remove();
         await player.load({ data: new Uint8Array(swfBuf) });
       } catch (err) {

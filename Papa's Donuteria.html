@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-  <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Papa's%20Donuteria/">
+  <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Papa's%20Donuteria/">
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -79,7 +79,7 @@
         player.style.height = "100%";
         container.appendChild(player);
 
-        var swfRes = await fetch('https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Papa's%20Donuteria/papasdonuteria.swf'); var swfBuf = await swfRes.arrayBuffer();
+        var swfRes = await fetch('https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Papa's%20Donuteria/papasdonuteria.swf'); var swfBuf = await swfRes.arrayBuffer();
         if (loadingMsg) loadingMsg.remove();
         await player.load({ data: new Uint8Array(swfBuf) });
       } catch (err) {
