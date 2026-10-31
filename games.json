@@ -200,6 +200,11 @@
     "icon": "icons/duck_life_5.jpg"
   },
   {
+    "name": "Escape Road 2",
+    "path": "Escape Road 2.html",
+    "icon": "icons/escape_road_2.png"
+  },
+  {
     "path": "Fireboy and Watergirl 1.html",
     "name": "Fireboy and Watergirl 1: Forest Temple",
     "icon": "icons/fireboy_watergirl_1.jpg"
