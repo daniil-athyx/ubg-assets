@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/OG-Noomiclone-Web-Port@main/">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes">
+    <title>Noomi Clone</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <style>
+        *::-webkit-scrollbar, html::-webkit-scrollbar, body::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
+        html, body {
+            width: 100vw !important;
+            height: 100vh !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+            background: #000 !important;
+            scrollbar-width: none !important;
+        }
+        #unity-container {
+            width: 100vw !important;
+            height: 100vh !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+        }
+        #unity-canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas" tabindex="-1"></canvas>
+        <div id="unity-loading-bar">
+            <div id="unity-logo"></div>
+            <div id="unity-progress-bar-empty">
+                <div id="unity-progress-bar-full"></div>
+            </div>
+        </div>
+        <div id="unity-warning"> </div>
+        <div id="unity-footer">
+            <div id="unity-webgl-logo"></div>
+            <div id="unity-fullscreen-button"></div>
+            <div id="unity-build-title">Noomi Clone</div>
+        </div>
+    </div>
+    <script>
+        var container = document.querySelector("#unity-container");
+        var canvas = document.querySelector("#unity-canvas");
+        var loadingBar = document.querySelector("#unity-loading-bar");
+        var progressBarFull = document.querySelector("#unity-progress-bar-full");
+        var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+        var warningBanner = document.querySelector("#unity-warning");
+
+        function unityShowBanner(msg, type) {
+            function updateBannerVisibility() {
+                warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+            }
+            var div = document.createElement('div');
+            div.innerHTML = msg;
+            warningBanner.appendChild(div);
+            if (type == 'error') div.style = 'background: red; padding: 10px;';
+            else {
+                if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+                setTimeout(function () {
+                    warningBanner.removeChild(div);
+                    updateBannerVisibility();
+                }, 5000);
+            }
+            updateBannerVisibility();
+        }
+
+        var buildUrl = "Build";
+        var loaderUrl = buildUrl + "/V1.7.5.loader.js";
+        var config = {
+            dataUrl: buildUrl + "/V1.7.5.data",
+            frameworkUrl: buildUrl + "/V1.7.5.framework.js",
+            codeUrl: buildUrl + "/V1.7.5.wasm",
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "NoomiClone Dev",
+            productName: "NoomiClone",
+            productVersion: "1.7.5",
+            showBanner: unityShowBanner,
+            matchWebGLToCanvasSize: true
+        };
+
+        loadingBar.style.display = "block";
+
+        async function initWasm() {
+            try {
+                const res1 = await fetch(buildUrl + "/V1.7.5.wasm.part1");
+                if (res1.ok) {
+                    const res2 = await fetch(buildUrl + "/V1.7.5.wasm.part2");
+                    if (res2.ok) {
+                        const b1 = await res1.blob();
+                        const b2 = await res2.blob();
+                        const combined = new Blob([b1, b2], { type: "application/wasm" });
+                        config.codeUrl = URL.createObjectURL(combined);
+                    }
+                }
+            } catch (e) {
+                console.warn("Using default wasm url:", e);
+            }
+        }
+
+        var script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = async () => {
+            await initWasm();
+            createUnityInstance(canvas, config, (progress) => {
+                progressBarFull.style.width = 100 * progress + "%";
+            }).then((unityInstance) => {
+                loadingBar.style.display = "none";
+                fullscreenButton.onclick = () => {
+                    unityInstance.SetFullscreen(1);
+                };
+            }).catch((message) => {
+                alert(message);
+            });
+        };
+
+        document.body.appendChild(script);
+    </script>
+</body>
+</html>
