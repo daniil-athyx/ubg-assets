@@ -45,11 +45,6 @@
         "icon": "icons/baldis_basics_remastered.png"
     },
     {
-        "name": "Baldis Basics Squared",
-        "path": "Baldi's Basics Squared.html",
-        "icon": "icons/baldis_basics_squared.png"
-    },
-    {
         "name": "Baldi's Basics: Ultra Decompile",
         "path": "Baldi Ultra Decompile.html",
         "icon": "icons/baldi_ultra_decompile.png"
@@ -58,6 +53,11 @@
         "name": "Baldi's Fun New School",
         "path": "Baldi's Fun New School.html",
         "icon": "icons/baldis_fun_new_school.png"
+    },
+    {
+        "name": "Baldis Basics Squared",
+        "path": "Baldi's Basics Squared.html",
+        "icon": "icons/baldis_basics_squared.png"
     },
     {
         "name": "Basketball Stars",
@@ -173,6 +173,11 @@
         "name": "Drift Hunters",
         "path": "Drift Hunters.html",
         "icon": "icons/drift_hunters.png"
+    },
+    {
+        "name": "Drive Mad",
+        "path": "Drive Mad.html",
+        "icon": "icons/drive_mad.png"
     },
     {
         "name": "Duck Life",
@@ -333,6 +338,11 @@
         "name": "Just Fall.LOL",
         "path": "Just Fall.lol.html",
         "icon": "icons/just_fall.png"
+    },
+    {
+        "name": "Level Devil",
+        "path": "Level Devil.html",
+        "icon": "icons/level_devil.png"
     },
     {
         "name": "Minecraft",
@@ -585,6 +595,16 @@
         "icon": "icons/schoolboy_runaway.jpg"
     },
     {
+        "name": "Slender: The Eight Pages",
+        "path": "Slender.html",
+        "icon": "icons/slender_the_eight_pages.png"
+    },
+    {
+        "name": "Slope",
+        "path": "Slope.html",
+        "icon": "icons/slope.png"
+    },
+    {
         "name": "Slope 2",
         "path": "Slope 2.html",
         "icon": "icons/slope_2.png"
@@ -613,6 +633,11 @@
         "name": "Spacebar Clicker",
         "path": "Spacebar Clicker.html",
         "icon": "icons/spacebar_clicker.png"
+    },
+    {
+        "name": "Stickman Hook",
+        "path": "Stickman Hook.html",
+        "icon": "icons/stickman_hook.png"
     },
     {
         "name": "Subway Surfers: St. Petersburg",
@@ -653,6 +678,11 @@
         "name": "The World's Hardest Game",
         "path": "World's Hardest Game.html",
         "icon": "icons/worlds_hardest_game.png"
+    },
+    {
+        "name": "There Is No Game",
+        "path": "There Is No Game.html",
+        "icon": "icons/there_is_no_game.png"
     },
     {
         "name": "Tomb of the Mask",
@@ -698,6 +728,11 @@
         "name": "Volley Random",
         "path": "Volley Random.html",
         "icon": "icons/volley_random.png"
+    },
+    {
+        "name": "We Become What We Behold",
+        "path": "We Become What We Behold.html",
+        "icon": "icons/we_become_what_we_behold.png"
     },
     {
         "name": "Wordle",

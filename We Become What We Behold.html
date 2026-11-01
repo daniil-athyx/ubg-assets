@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/We%20Become%20What%20We%20Behold/">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>We Become What We Behold</title>
+    <link rel="stylesheet" href="css/game.css">
+    <style>
+        * { margin: 0; padding: 0; }
+        html, body {
+            background: #222;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #stage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+
+    <script>
+        // --- Athyx Sitelock Security Guard ---
+        (function() {
+            var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+            var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+
+            function _isAuthorized() {
+                var current = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : "";
+                if (_domains.indexOf(current) !== -1) return true;
+
+                if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+                    for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+                        try {
+                            var aHost = new URL(window.location.ancestorOrigins[i]).hostname.toLowerCase();
+                            if (_domains.indexOf(aHost) !== -1) return true;
+                        } catch(e) {}
+                    }
+                    return false;
+                }
+
+                if (document.referrer) {
+                    try {
+                        var refHost = new URL(document.referrer).hostname.toLowerCase();
+                        if (_domains.indexOf(refHost) !== -1) return true;
+                    } catch(e) {}
+                }
+
+                try {
+                    if (window.parent && window.parent.location && window.parent.location.hostname) {
+                        if (_domains.indexOf(window.parent.location.hostname.toLowerCase()) !== -1) return true;
+                    }
+                } catch(e) {}
+
+                return false;
+            }
+
+            if (!_isAuthorized()) {
+                window.stop && window.stop();
+                document.documentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0e15;color:#fff;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="color:#f43f5e;font-size:32px;margin-bottom:12px;">Access Restricted</h1><p style="color:#94a3b8;font-size:16px;max-width:500px;line-height:1.6;margin:0 auto 24px;">This game is protected and authorized for playback exclusively on <b>Athyx Network</b>.</p><a href="https://athyx-network.web.app/" target="_blank" style="display:inline-block;background:#3b82f6;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;box-shadow:0 4px 14px rgba(59,130,246,0.4);">Play on Athyx Network</a></div></div>';
+                throw new Error("Athyx Sitelock: Unauthorized domain");
+            }
+        })();
+    </script>
+
+</head>
+<body>
+    <div id="stage"></div>
+    <div id="modal_shade"></div>
+    <div class="overlay" id="warning">
+        <div>oh noes</div>
+        <div>your browser doesn't support webgl.<br>try a different browser?</div>
+    </div>
+    <div class="overlay" id="paused">
+        <div>paused</div>
+        <div>click anywhere to resume</div>
+    </div>
+
+    <script src="js/lib/pixi.min.js"></script>
+    <script src="js/lib/howler.js"></script>
+    <script src="js/lib/stats.min.js"></script>
+    <script>var createjs = window;</script>
+    <script src="js/lib/tweenjs-0.6.2.min.js"></script>
+    <script>Ticker.framerate=60; Ticker.paused=true;</script>
+    <script src="js/lib/helpers.js"></script>
+
+    <script src="js/core/Game.js"></script>
+    <script src="js/core/SceneManager.js"></script>
+    <script src="js/core/Scene.js"></script>
+
+    <script src="js/game/World.js"></script>
+    <script src="js/game/Camera.js"></script>
+    <script src="js/game/Director.js"></script>
+    <script src="js/game/Peep.js"></script>
+    <script src="js/game/TV.js"></script>
+    <script src="js/game/AnimationProp.js"></script>
+    <script src="js/game/ScreenShake.js"></script>
+    <script src="js/game/ScreenZoomOut.js"></script>
+    <script src="js/game/Gore.js"></script>
+    <script src="js/game/DeadBody.js"></script>
+    <script src="js/game/Blood.js"></script>
+
+    <script src="js/peeps/NormalPeep.js"></script>
+    <script src="js/peeps/CrazyPeep.js"></script>
+    <script src="js/peeps/NervousPeep.js"></script>
+    <script src="js/peeps/SnobbyPeep.js"></script>
+    <script src="js/peeps/AngryPeep.js"></script>
+    <script src="js/peeps/HatPeep.js"></script>
+    <script src="js/peeps/LoverPeep.js"></script>
+    <script src="js/peeps/ProtestAnim.js"></script>
+    <script src="js/peeps/HelpingAnim.js"></script>
+    <script src="js/peeps/HappyWeirdoPeep.js"></script>
+    <script src="js/peeps/EvilHatPeep.js"></script>
+    <script src="js/peeps/PanicPeep.js"></script>
+    <script src="js/peeps/MurderPeep.js"></script>
+
+    <script src="js/misc/Candlelight.js"></script>
+    <script src="js/misc/LoversWatching.js"></script>
+    <script src="js/misc/Cricket.js"></script>
+    <script src="js/misc/Cursor.js"></script>
+
+    <script src="js/scenes/Scene_Preloader.js"></script>
+    <script src="js/scenes/Scene_Quote.js"></script>
+    <script src="js/scenes/Scene_Game.js"></script>
+    <script src="js/scenes/Scene_Credits.js"></script>
+    <script src="js/scenes/Scene_Post_Credits.js"></script>
+    <script src="js/scenes/Scene_Post_Post_Credits.js"></script>
+    <script src="js/scenes/Scene_EndPrototype.js"></script>
+    <script src="js/scenes/Act_I.js"></script>
+    <script src="js/scenes/Act_II.js"></script>
+    <script src="js/scenes/Act_III.js"></script>
+    <script src="js/scenes/Scene_Meta.js"></script>
+
+    <script>
+    Game.stats = false;
+    window.onload = function(){
+        try{
+            Game.init();
+        }catch(e){
+            document.getElementById("warning").style.display = "block";
+        }
+    };
+    </script>
+</body>
+</html>
