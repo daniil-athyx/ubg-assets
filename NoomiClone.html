@@ -61,6 +61,62 @@
         <div id="unity-warning"> </div>
     </div>
     <script>
+        // --- Athyx Sitelock Security Guard ---
+        (function() {
+            var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+            var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+
+            function _isAuthorized() {
+                var current = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : "";
+                if (_domains.indexOf(current) !== -1) return true;
+
+                if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+                    for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+                        try {
+                            var aHost = new URL(window.location.ancestorOrigins[i]).hostname.toLowerCase();
+                            if (_domains.indexOf(aHost) !== -1) return true;
+                        } catch(e) {}
+                    }
+                    return false;
+                }
+
+                if (document.referrer) {
+                    try {
+                        var refHost = new URL(document.referrer).hostname.toLowerCase();
+                        if (_domains.indexOf(refHost) !== -1) return true;
+                    } catch(e) {}
+                }
+
+                try {
+                    if (window.top && window.top.location && window.top.location.hostname) {
+                        var topHost = window.top.location.hostname.toLowerCase();
+                        if (_domains.indexOf(topHost) !== -1) return true;
+                    }
+                } catch(e) {}
+
+                return false;
+            }
+
+            if (!_isAuthorized()) {
+                window.stop && window.stop();
+                var lockStyle = "position:fixed;inset:0;background:#06060c;color:#ff3b5c;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Segoe UI,sans-serif;z-index:99999999;text-align:center;padding:24px;";
+                var html = '<div style="' + lockStyle + '">' +
+                    '<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom:16px;">' +
+                    '<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>' +
+                    '<h1 style="font-size:22px;margin:0 0 8px;font-weight:700;letter-spacing:0.5px;">SECURITY LOCK &bull; UNAUTHORIZED HOST</h1>' +
+                    '<p style="color:#a1a1aa;max-width:440px;font-size:14px;line-height:1.6;margin:0 0 20px;">' +
+                    'Noomi Clone is protected software exclusively authorized to run on <strong>Athyx Network</strong>. Embedding or copying to unauthorized domains is prohibited.' +
+                    '</p>' +
+                    '<a href="https://athyx-network.web.app/" target="_top" style="background:#0affce;color:#05050c;text-decoration:none;font-weight:700;padding:12px 28px;border-radius:10px;font-size:14px;box-shadow:0 0 20px rgba(10,255,206,0.3);">' +
+                    'Play on Athyx Network &rarr;' +
+                    '</a></div>';
+                
+                document.documentElement.innerHTML = html;
+                window.createUnityInstance = function() { return Promise.reject(new Error("Unauthorized Host")); };
+                throw new Error("[Athyx Security] Execution halted: Unauthorized host.");
+            }
+        })();
+
         var container = document.querySelector("#unity-container");
         var canvas = document.querySelector("#unity-canvas");
         var loadingBar = document.querySelector("#unity-loading-bar");
