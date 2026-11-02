@@ -1,93 +1,143 @@
 <!DOCTYPE html>
-
-<!-- Ultimate Game Stash file--> 
-<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
-
-
-
-<!DOCTYPE html>
 <html lang="en-us">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Slope 2 Player on your grandma</title><meta name="robots" content="noindex">
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Slope 2</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@b7188745eb03a3bde3183ff3494d0713ac5ad6c5/slope%202%20player/TemplateData/style.css">
-  <body>
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=1280 height=720></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+        }
+        #unity-container {
+            position: fixed !important;
+            inset: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            transform: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        #unity-canvas {
+            width: 100vw !important;
+            height: 100vh !important;
+            display: block !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            background: #231F20;
+        }
+        #unity-footer {
+            display: none !important;
+        }
+        #unity-loading-bar {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+            z-index: 10;
+        }
+    </style>
+
+    <script>
+        // --- Athyx Sitelock Security Guard ---
+        (function() {
+            var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+            var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+
+            function _isAuthorized() {
+                var current = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : "";
+                if (_domains.indexOf(current) !== -1) return true;
+
+                if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+                    for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+                        try {
+                            var aHost = new URL(window.location.ancestorOrigins[i]).hostname.toLowerCase();
+                            if (_domains.indexOf(aHost) !== -1) return true;
+                        } catch(e) {}
+                    }
+                    return false;
+                }
+
+                if (document.referrer) {
+                    try {
+                        var refHost = new URL(document.referrer).hostname.toLowerCase();
+                        if (_domains.indexOf(refHost) !== -1) return true;
+                    } catch(e) {}
+                }
+
+                try {
+                    if (window.parent && window.parent.location && window.parent.location.hostname) {
+                        if (_domains.indexOf(window.parent.location.hostname.toLowerCase()) !== -1) return true;
+                    }
+                } catch(e) {}
+
+                return false;
+            }
+
+            if (!_isAuthorized()) {
+                window.stop && window.stop();
+                document.documentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0e15;color:#fff;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="color:#f43f5e;font-size:32px;margin-bottom:12px;">Access Restricted</h1><p style="color:#94a3b8;font-size:16px;max-width:500px;line-height:1.6;margin:0 auto 24px;">This game is protected and authorized for playback exclusively on <b>Athyx Network</b>.</p><a href="https://athyx-network.web.app/" target="_blank" style="display:inline-block;background:#3b82f6;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;box-shadow:0 4px 14px rgba(59,130,246,0.4);">Play on Athyx Network</a></div></div>';
+                throw new Error("Athyx Sitelock: Unauthorized domain");
+            }
+        })();
+    </script>
+
+</head>
+<body>
+    <div id="unity-container" class="unity-mobile">
+        <canvas id="unity-canvas"></canvas>
+        <div id="unity-loading-bar">
+            <div id="unity-logo"></div>
+            <div id="unity-progress-bar-empty">
+                <div id="unity-progress-bar-full"></div>
+            </div>
         </div>
-      </div>
-      <div id="unity-mobile-warning">
-        WebGL builds are not supported on mobile devices.
-      </div>
-      <div id="unity-footer">
-        <div id="unity-webgl-logo"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">Slope 2 Player</div>
-      </div>
     </div>
     <script>
-      var buildUrl = "";
-      var loaderUrl = buildUrl + "https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@b7188745eb03a3bde3183ff3494d0713ac5ad6c5/slope%202%20player/Build/WebGL2Players%20v1.1.loader.js";
-      var config = {
-        dataUrl: buildUrl + "https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@b7188745eb03a3bde3183ff3494d0713ac5ad6c5/slope%202%20player/Build/WebGL2Players%20v1.1.data.unityweb",
-        frameworkUrl: buildUrl + "https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@b7188745eb03a3bde3183ff3494d0713ac5ad6c5/slope%202%20player/Build/WebGL2Players%20v1.1.framework.js.unityweb",
-        codeUrl: buildUrl + "https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@b7188745eb03a3bde3183ff3494d0713ac5ad6c5/slope%202%20player/Build/WebGL2Players%20v1.1.wasm.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "DefaultCompany",
-        productName: "Slope 2 Player",
-        productVersion: "1",
-      };
+        var buildUrl = "";
+        var loaderUrl = "https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@b7188745eb03a3bde3183ff3494d0713ac5ad6c5/slope%202%20player/Build/WebGL2Players%20v1.1.loader.js";
+        var config = {
+            dataUrl: "https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@b7188745eb03a3bde3183ff3494d0713ac5ad6c5/slope%202%20player/Build/WebGL2Players%20v1.1.data.unityweb",
+            frameworkUrl: "https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@b7188745eb03a3bde3183ff3494d0713ac5ad6c5/slope%202%20player/Build/WebGL2Players%20v1.1.framework.js.unityweb",
+            codeUrl: "https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@b7188745eb03a3bde3183ff3494d0713ac5ad6c5/slope%202%20player/Build/WebGL2Players%20v1.1.wasm.unityweb",
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "DefaultCompany",
+            productName: "Slope 2 Player",
+            productVersion: "1",
+            matchWebGLToCanvasSize: true
+        };
 
-      var container = document.querySelector("#unity-container");
-      var canvas = document.querySelector("#unity-canvas");
-      var loadingBar = document.querySelector("#unity-loading-bar");
-      var progressBarFull = document.querySelector("#unity-progress-bar-full");
-      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
-      var mobileWarning = document.querySelector("#unity-mobile-warning");
+        var container = document.querySelector("#unity-container");
+        var canvas = document.querySelector("#unity-canvas");
+        var loadingBar = document.querySelector("#unity-loading-bar");
+        var progressBarFull = document.querySelector("#unity-progress-bar-full");
 
-      // By default Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
+        loadingBar.style.display = "block";
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        container.className = "unity-mobile";
-        // Avoid draining fillrate performance on mobile devices,
-        // and default/override low DPI mode on mobile browsers.
-        config.devicePixelRatio = 1;
-        mobileWarning.style.display = "block";
-        setTimeout(() => {
-          mobileWarning.style.display = "none";
-        }, 5000);
-      } else {
-        canvas.style.width = "1024px";
-        canvas.style.height = "576px";
-      }
-      loadingBar.style.display = "block";
-
-      var script = document.createElement("script");
-      script.src = loaderUrl;
-      script.onload = () => {
-        createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-        }).then((unityInstance) => {
-          loadingBar.style.display = "none";
-          fullscreenButton.onclick = () => {
-            unityInstance.SetFullscreen(1);
-          };
-        }).catch((message) => {
-          console.log(message);
-        });
-      };
-      document.body.appendChild(script);
+        var script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+            createUnityInstance(canvas, config, (progress) => {
+                progressBarFull.style.width = 100 * progress + "%";
+            }).then((unityInstance) => {
+                loadingBar.style.display = "none";
+                window.unityInstance = unityInstance;
+            }).catch((message) => {
+                console.error(message);
+            });
+        };
+        document.body.appendChild(script);
     </script>
 </body>
 </html>

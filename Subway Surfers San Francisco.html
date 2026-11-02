@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/ubg-assets@main/subway-surfers-san-francisco/">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Subway Surfers: San Francisco</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #231F20;
+        }
+        #gameContainer {
+            width: 100vw !important;
+            height: 100vh !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+        }
+        canvas, #gameContainer canvas {
+            width: 100vw !important;
+            height: 100vh !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            display: block !important;
+        }
+        #loading-screen {
+            position: fixed;
+            inset: 0;
+            background: #111;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: sans-serif;
+            z-index: 9999;
+        }
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top-color: #0affce;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+
+    <script>
+        // --- Athyx Sitelock Security Guard ---
+        (function() {
+            var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+            var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+
+            function _isAuthorized() {
+                var current = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : "";
+                if (_domains.indexOf(current) !== -1) return true;
+
+                if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+                    for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+                        try {
+                            var aHost = new URL(window.location.ancestorOrigins[i]).hostname.toLowerCase();
+                            if (_domains.indexOf(aHost) !== -1) return true;
+                        } catch(e) {}
+                    }
+                    return false;
+                }
+
+                if (document.referrer) {
+                    try {
+                        var refHost = new URL(document.referrer).hostname.toLowerCase();
+                        if (_domains.indexOf(refHost) !== -1) return true;
+                    } catch(e) {}
+                }
+
+                try {
+                    if (window.parent && window.parent.location && window.parent.location.hostname) {
+                        if (_domains.indexOf(window.parent.location.hostname.toLowerCase()) !== -1) return true;
+                    }
+                } catch(e) {}
+
+                return false;
+            }
+
+            if (!_isAuthorized()) {
+                window.stop && window.stop();
+                document.documentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0e15;color:#fff;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="color:#f43f5e;font-size:32px;margin-bottom:12px;">Access Restricted</h1><p style="color:#94a3b8;font-size:16px;max-width:500px;line-height:1.6;margin:0 auto 24px;">This game is protected and authorized for playback exclusively on <b>Athyx Network</b>.</p><a href="https://athyx-network.web.app/" target="_blank" style="display:inline-block;background:#3b82f6;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;box-shadow:0 4px 14px rgba(59,130,246,0.4);">Play on Athyx Network</a></div></div>';
+                throw new Error("Athyx Sitelock: Unauthorized domain");
+            }
+        })();
+    </script>
+
+    <script>
+        // Athyx Ad-Free Poki SDK Shim
+        window.PokiSDK = {
+            init: function() { return Promise.resolve(); },
+            commercialBreak: function() { return Promise.resolve(); },
+            rewardedBreak: function() { return Promise.resolve(true); },
+            displayAd: function() { return Promise.resolve(); },
+            destroyAd: function() {},
+            getLeaderboard: function() { return Promise.resolve(); },
+            gameLoadingStart: function() {},
+            gameLoadingFinished: function() {},
+            gameLoadingProgress: function() {},
+            gameplayStart: function() {},
+            gameplayStop: function() {},
+            happyTime: function() {}
+        };
+    </script>
+    <script src="UnityLoader.2019.2.js"></script>
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <div id="load-status" style="font-size: 16px; font-weight: 600; color: #0affce;">Loading Subway Surfers...</div>
+    </div>
+    <div id="gameContainer"></div>
+    <script>
+        function mergeParts(urls) {
+            return Promise.all(urls.map(u => fetch(u).then(r => {
+                if (!r.ok) throw new Error("Failed to load chunk: " + u);
+                return r.arrayBuffer();
+            }))).then(buffers => {
+                let blob = new Blob(buffers);
+                return URL.createObjectURL(blob);
+            });
+        }
+
+        const statusEl = document.getElementById("load-status");
+        statusEl.innerText = "Merging game data...";
+
+        Promise.all([
+            mergeParts(["Build/SanFrancisco.data.unityweb.part1", "Build/SanFrancisco.data.unityweb.part2"]),
+            mergeParts(["Build/SanFrancisco.wasm.code.unityweb.part1", "Build/SanFrancisco.wasm.code.unityweb.part2"])
+        ]).then(([dataUrl, codeUrl]) => {
+            statusEl.innerText = "Launching Unity engine...";
+            var buildConfig = {
+                companyName: "Kiloo Games",
+                productName: "Subway Surfers",
+                productVersion: "1.94.0",
+                dataUrl: dataUrl,
+                wasmCodeUrl: codeUrl,
+                wasmFrameworkUrl: "Build/SanFrancisco.wasm.framework.unityweb",
+                TOTAL_MEMORY: 369098752,
+                graphicsAPI: ["WebGL 2.0", "WebGL 1.0"],
+                webglContextAttributes: { preserveDrawingBuffer: false },
+                splashScreenStyle: "Dark",
+                backgroundColor: "#231F20",
+                developmentBuild: false,
+                multithreading: false,
+                unityVersion: "2019.4.18f1"
+            };
+
+            let blob = new Blob([JSON.stringify(buildConfig)], { type: 'application/json' });
+            let blobUrl = URL.createObjectURL(blob);
+
+            var gameInstance = UnityLoader.instantiate("gameContainer", buildConfig, {
+                url: blobUrl,
+                onProgress: function(instance, progress) {
+                    if (progress < 1) {
+                        statusEl.innerText = "Loading assets " + Math.round(progress * 100) + "%...";
+                    }
+                },
+                Module: {
+                    onRuntimeInitialized: function() {
+                        var ls = document.getElementById("loading-screen");
+                        if (ls) ls.style.display = "none";
+                    }
+                }
+            });
+        }).catch(err => {
+            console.error(err);
+            statusEl.innerText = "Error loading Subway Surfers: " + err.message;
+        });
+    </script>
+</body>
+</html>

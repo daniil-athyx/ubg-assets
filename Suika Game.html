@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/kairess/suika-game@main/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Suika Game</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #1e1e24;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            color: #fff;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        #game-wrapper {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-height: 100vh;
+        }
+        #scoreboard {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #f7f4c8;
+            background: rgba(0,0,0,0.4);
+            padding: 6px 14px;
+            border-radius: 8px;
+            z-index: 10;
+        }
+        canvas {
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            max-height: 96vh;
+            max-width: 96vw;
+            object-fit: contain;
+        }
+        #hint {
+            position: absolute;
+            bottom: 8px;
+            font-size: 13px;
+            color: #cbd5e1;
+            background: rgba(0,0,0,0.4);
+            padding: 4px 12px;
+            border-radius: 6px;
+            pointer-events: none;
+        }
+    </style>
+
+    <script>
+        // --- Athyx Sitelock Security Guard ---
+        (function() {
+            var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+            var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+
+            function _isAuthorized() {
+                var current = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : "";
+                if (_domains.indexOf(current) !== -1) return true;
+
+                if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+                    for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+                        try {
+                            var aHost = new URL(window.location.ancestorOrigins[i]).hostname.toLowerCase();
+                            if (_domains.indexOf(aHost) !== -1) return true;
+                        } catch(e) {}
+                    }
+                    return false;
+                }
+
+                if (document.referrer) {
+                    try {
+                        var refHost = new URL(document.referrer).hostname.toLowerCase();
+                        if (_domains.indexOf(refHost) !== -1) return true;
+                    } catch(e) {}
+                }
+
+                try {
+                    if (window.parent && window.parent.location && window.parent.location.hostname) {
+                        if (_domains.indexOf(window.parent.location.hostname.toLowerCase()) !== -1) return true;
+                    }
+                } catch(e) {}
+
+                return false;
+            }
+
+            if (!_isAuthorized()) {
+                window.stop && window.stop();
+                document.documentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0e15;color:#fff;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="color:#f43f5e;font-size:32px;margin-bottom:12px;">Access Restricted</h1><p style="color:#94a3b8;font-size:16px;max-width:500px;line-height:1.6;margin:0 auto 24px;">This game is protected and authorized for playback exclusively on <b>Athyx Network</b>.</p><a href="https://athyx-network.web.app/" target="_blank" style="display:inline-block;background:#3b82f6;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;box-shadow:0 4px 14px rgba(59,130,246,0.4);">Play on Athyx Network</a></div></div>';
+                throw new Error("Athyx Sitelock: Unauthorized domain");
+            }
+        })();
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+</head>
+<body>
+    <div id="game-wrapper">
+        <div id="scoreboard">Score: <span id="scoreVal">0</span></div>
+        <div id="hint">Mouse/Touch or A / D to move &bull; Click/Space to drop</div>
+    </div>
+
+    <script>
+        const FRUITS_BASE = [
+            { name: "base/00_cherry", radius: 33 / 2, score: 2 },
+            { name: "base/01_strawberry", radius: 48 / 2, score: 4 },
+            { name: "base/02_grape", radius: 61 / 2, score: 6 },
+            { name: "base/03_gyool", radius: 69 / 2, score: 8 },
+            { name: "base/04_orange", radius: 89 / 2, score: 10 },
+            { name: "base/05_apple", radius: 114 / 2, score: 12 },
+            { name: "base/06_pear", radius: 129 / 2, score: 14 },
+            { name: "base/07_peach", radius: 156 / 2, score: 16 },
+            { name: "base/08_pineapple", radius: 177 / 2, score: 18 },
+            { name: "base/09_melon", radius: 220 / 2, score: 20 },
+            { name: "base/10_watermelon", radius: 259 / 2, score: 24 }
+        ];
+
+        const FRUITS = FRUITS_BASE;
+        const { Bodies, Body, Engine, Events, Render, Runner, World } = Matter;
+
+        const engine = Engine.create();
+        const wrapper = document.getElementById("game-wrapper");
+        const scoreVal = document.getElementById("scoreVal");
+        let score = 0;
+
+        const render = Render.create({
+            engine,
+            element: wrapper,
+            options: {
+                wireframes: false,
+                background: "#2a2438",
+                width: 620,
+                height: 850
+            }
+        });
+
+        const world = engine.world;
+        const leftWall = Bodies.rectangle(15, 395, 30, 790, { isStatic: true, render: { fillStyle: "#5c5470" } });
+        const rightWall = Bodies.rectangle(605, 395, 30, 790, { isStatic: true, render: { fillStyle: "#5c5470" } });
+        const ground = Bodies.rectangle(310, 820, 620, 60, { isStatic: true, render: { fillStyle: "#5c5470" } });
+        const topLine = Bodies.rectangle(310, 150, 620, 2, { name: "topLine", isStatic: true, isSensor: true, render: { fillStyle: "#e63946" } });
+
+        World.add(world, [leftWall, rightWall, ground, topLine]);
+        Render.run(render);
+        Runner.run(engine);
+
+        let currentBody = null;
+        let currentFruit = null;
+        let disableAction = false;
+        let interval = null;
+
+        function addFruit() {
+            const index = Math.floor(Math.random() * 5);
+            const fruit = FRUITS[index];
+
+            const body = Bodies.circle(300, 50, fruit.radius, {
+                index: index,
+                isSleeping: true,
+                render: { sprite: { texture: fruit.name + ".png" } },
+                restitution: 0.2
+            });
+
+            currentBody = body;
+            currentFruit = fruit;
+            World.add(world, body);
+        }
+
+        function dropCurrentFruit() {
+            if (disableAction || !currentBody) return;
+            currentBody.isSleeping = false;
+            disableAction = true;
+            setTimeout(() => {
+                addFruit();
+                disableAction = false;
+            }, 800);
+        }
+
+        function moveCurrentFruit(targetX) {
+            if (!currentBody || !currentFruit || currentBody.isSleeping === false) return;
+            const minX = 30 + currentFruit.radius;
+            const maxX = 590 - currentFruit.radius;
+            const clampedX = Math.max(minX, Math.min(maxX, targetX));
+            Body.setPosition(currentBody, { x: clampedX, y: currentBody.position.y });
+        }
+
+        // Mouse & Touch controls
+        const canvas = render.canvas;
+        canvas.addEventListener("mousemove", (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = 620 / rect.width;
+            const x = (e.clientX - rect.left) * scaleX;
+            moveCurrentFruit(x);
+        });
+
+        canvas.addEventListener("click", () => {
+            dropCurrentFruit();
+        });
+
+        canvas.addEventListener("touchmove", (e) => {
+            if (e.touches.length > 0) {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = 620 / rect.width;
+                const x = (e.touches[0].clientX - rect.left) * scaleX;
+                moveCurrentFruit(x);
+            }
+        }, { passive: true });
+
+        canvas.addEventListener("touchend", () => {
+            dropCurrentFruit();
+        });
+
+        // Keyboard controls
+        window.addEventListener("keydown", (e) => {
+            if (disableAction) return;
+            if (e.code === "KeyA" || e.code === "ArrowLeft") {
+                if (interval) return;
+                interval = setInterval(() => {
+                    if (currentBody && currentFruit && currentBody.position.x - currentFruit.radius > 30) {
+                        Body.setPosition(currentBody, { x: currentBody.position.x - 3, y: currentBody.position.y });
+                    }
+                }, 10);
+            } else if (e.code === "KeyD" || e.code === "ArrowRight") {
+                if (interval) return;
+                interval = setInterval(() => {
+                    if (currentBody && currentFruit && currentBody.position.x + currentFruit.radius < 590) {
+                        Body.setPosition(currentBody, { x: currentBody.position.x + 3, y: currentBody.position.y });
+                    }
+                }, 10);
+            } else if (e.code === "KeyS" || e.code === "ArrowDown" || e.code === "Space") {
+                dropCurrentFruit();
+            }
+        });
+
+        window.addEventListener("keyup", (e) => {
+            if (["KeyA", "KeyD", "ArrowLeft", "ArrowRight"].includes(e.code)) {
+                clearInterval(interval);
+                interval = null;
+            }
+        });
+
+        Events.on(engine, "collisionStart", (event) => {
+            event.pairs.forEach((collision) => {
+                if (collision.bodyA.index !== undefined && collision.bodyA.index === collision.bodyB.index) {
+                    const index = collision.bodyA.index;
+                    if (index === FRUITS.length - 1) return;
+
+                    World.remove(world, [collision.bodyA, collision.bodyB]);
+                    const nextFruit = FRUITS[index + 1];
+                    score += nextFruit.score;
+                    scoreVal.innerText = score;
+
+                    const newBody = Bodies.circle(
+                        collision.collision.supports[0].x,
+                        collision.collision.supports[0].y,
+                        nextFruit.radius,
+                        {
+                            render: { sprite: { texture: nextFruit.name + ".png" } },
+                            index: index + 1,
+                            restitution: 0.2
+                        }
+                    );
+                    World.add(world, newBody);
+                }
+            });
+        });
+
+        addFruit();
+    </script>
+</body>
+</html>

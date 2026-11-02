@@ -19,9 +19,23 @@
         .webgl-content, #gameContainer {
             width: 100vw !important;
             height: 100vh !important;
-            position: absolute;
-            top: 0;
-            left: 0;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            transform: none !important;
+        }
+        canvas, #gameContainer canvas {
+            width: 100vw !important;
+            height: 100vh !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            display: block !important;
+        }
+        .footer {
+            display: none !important;
         }
     </style>
 
