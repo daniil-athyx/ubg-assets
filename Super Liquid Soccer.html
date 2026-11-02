@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/SuperLiquidSoccer/SuperLiquidSoccer.github.io@main/">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+    <title>Super Liquid Soccer</title>
+
+    <script>
+        // --- Athyx Sitelock Security Guard ---
+        (function() {
+            var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+            var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+
+            function _isAuthorized() {
+                var current = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : "";
+                if (_domains.indexOf(current) !== -1) return true;
+
+                if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+                    for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+                        try {
+                            var aHost = new URL(window.location.ancestorOrigins[i]).hostname.toLowerCase();
+                            if (_domains.indexOf(aHost) !== -1) return true;
+                        } catch(e) {}
+                    }
+                    return false;
+                }
+
+                if (document.referrer) {
+                    try {
+                        var refHost = new URL(document.referrer).hostname.toLowerCase();
+                        if (_domains.indexOf(refHost) !== -1) return true;
+                    } catch(e) {}
+                }
+
+                try {
+                    if (window.parent && window.parent.location && window.parent.location.hostname) {
+                        if (_domains.indexOf(window.parent.location.hostname.toLowerCase()) !== -1) return true;
+                    }
+                } catch(e) {}
+
+                return false;
+            }
+
+            if (!_isAuthorized()) {
+                window.stop && window.stop();
+                document.documentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0e15;color:#fff;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="color:#f43f5e;font-size:32px;margin-bottom:12px;">Access Restricted</h1><p style="color:#94a3b8;font-size:16px;max-width:500px;line-height:1.6;margin:0 auto 24px;">This game is protected and authorized for playback exclusively on <b>Athyx Network</b>.</p><a href="https://athyx-network.web.app/" target="_blank" style="display:inline-block;background:#3b82f6;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;box-shadow:0 4px 14px rgba(59,130,246,0.4);">Play on Athyx Network</a></div></div>';
+                throw new Error("Athyx Sitelock: Unauthorized domain access blocked.");
+            }
+        })();
+    </script>
+
+    <style>
+        * { box-sizing: border-box; }
+        html, body {
+            touch-action: none;
+            margin: 0;
+            border: 0 none;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            text-align: center;
+            background-color: #137728;
+            background-image: url(index.png);
+            background-repeat: no-repeat;
+            background-position: 50% 0%;
+        }
+
+        #canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            color: white;
+        }
+
+        #canvas:focus {
+            outline: none;
+        }
+
+        .godot {
+            font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
+            color: #e0e0e0;
+            background-color: #3b3943;
+            background-image: linear-gradient(to bottom, #403e48, #35333c);
+            border: 1px solid #45434e;
+            box-shadow: 0 0 1px 1px #2f2d35;
+        }
+
+        #status {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+        }
+
+        #status-progress {
+            width: 366px;
+            height: 20px;
+            background-color: #2f2f2f;
+            border: 1px solid #444246;
+            padding: 1px;
+            visibility: visible;
+        }
+
+        @media only screen and (orientation:portrait) {
+            #status-progress {
+                width: 61.8%;
+            }
+        }
+
+        #status-progress-inner {
+            height: 100%;
+            width: 0;
+            box-sizing: border-box;
+            transition: width 0.5s linear;
+            background-color: #efefef;
+        }
+
+        #status-indeterminate {
+            height: 42px;
+            visibility: visible;
+            position: relative;
+        }
+
+        #status-indeterminate > div {
+            width: 4.5px;
+            height: 0;
+            border-style: solid;
+            border-width: 9px 3px 0 3px;
+            border-color: #2b2b2b transparent transparent transparent;
+            transform-origin: center 21px;
+            position: absolute;
+        }
+
+        #status-indeterminate > div:nth-child(1) { transform: rotate( 22.5deg); }
+        #status-indeterminate > div:nth-child(2) { transform: rotate( 67.5deg); }
+        #status-indeterminate > div:nth-child(3) { transform: rotate( 67.5deg); }
+        #status-indeterminate > div:nth-child(4) { transform: rotate(157.5deg); }
+        #status-indeterminate > div:nth-child(5) { transform: rotate(202.5deg); }
+        #status-indeterminate > div:nth-child(6) { transform: rotate(247.5deg); }
+        #status-indeterminate > div:nth-child(7) { transform: rotate(292.5deg); }
+        #status-indeterminate > div:nth-child(8) { transform: rotate(337.5deg); }
+
+        #status-notice {
+            margin: 0 100px;
+            line-height: 1.3;
+            visibility: visible;
+            padding: 4px 6px;
+        }
+    </style>
+
+    <!-- Poki SDK mock / wrapper -->
+    <script src="patch/js/poki-sdk-v2.js"></script>
+    <script>
+        window.addEventListener('keydown', ev => {
+            if (['ArrowDown', 'ArrowUp', ' '].includes(ev.key)) {
+                ev.preventDefault();
+            }
+        });
+        window.addEventListener('wheel', ev => ev.preventDefault(), { passive: false });
+    </script>
+</head>
+<body>
+    <canvas id="canvas">
+        HTML5 canvas appears to be unsupported in the current browser.
+    </canvas>
+    <div id="status">
+        <div id="status-progress" style="display: none;" oncontextmenu="event.preventDefault();"><div id="status-progress-inner"></div></div>
+        <div id="status-indeterminate" style="display: none;" oncontextmenu="event.preventDefault();">
+            <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        </div>
+        <div id="status-notice" class="godot" style="display: none;"></div>
+    </div>
+
+    <script type="text/javascript" src="index.js"></script>
+    <script type="text/javascript">
+        const GODOT_CONFIG = {
+            "args": [],
+            "canvasResizePolicy": 2,
+            "executable": "index",
+            "experimentalVK": false,
+            "fileSizes": { "index.pck": 13430320, "index.wasm": 13789463 },
+            "focusCanvas": true,
+            "gdnativeLibs": [],
+            "serviceWorker": "index.service.worker.js"
+        };
+        var engine = new Engine(GODOT_CONFIG);
+
+        function startGameLoading() {
+            const INDETERMINATE_STATUS_STEP_MS = 100;
+            var statusProgress = document.getElementById('status-progress');
+            var statusProgressInner = document.getElementById('status-progress-inner');
+            var statusIndeterminate = document.getElementById('status-indeterminate');
+            var statusNotice = document.getElementById('status-notice');
+
+            var initializing = true;
+            var statusMode = 'hidden';
+
+            var animationCallbacks = [];
+            function animate(time) {
+                animationCallbacks.forEach(callback => callback(time));
+                requestAnimationFrame(animate);
+            }
+            requestAnimationFrame(animate);
+
+            function setStatusMode(mode) {
+                if (statusMode === mode || !initializing)
+                    return;
+                [statusProgress, statusIndeterminate, statusNotice].forEach(elem => {
+                    elem.style.display = 'none';
+                });
+                animationCallbacks = animationCallbacks.filter(function(value) {
+                    return (value != animateStatusIndeterminate);
+                });
+                switch (mode) {
+                    case 'progress':
+                        statusProgress.style.display = 'block';
+                        break;
+                    case 'indeterminate':
+                        statusIndeterminate.style.display = 'block';
+                        animationCallbacks.push(animateStatusIndeterminate);
+                        break;
+                    case 'notice':
+                        statusNotice.style.display = 'block';
+                        break;
+                    case 'hidden':
+                        break;
+                    default:
+                        throw new Error('Invalid status mode');
+                }
+                statusMode = mode;
+            }
+
+            function animateStatusIndeterminate(ms) {
+                var i = Math.floor(ms / INDETERMINATE_STATUS_STEP_MS % 8);
+                if (statusIndeterminate.children[i] && statusIndeterminate.children[i].style.borderTopColor == '') {
+                    Array.prototype.slice.call(statusIndeterminate.children).forEach(child => {
+                        child.style.borderTopColor = '';
+                    });
+                    statusIndeterminate.children[i].style.borderTopColor = '#dfdfdf';
+                }
+            }
+
+            function setStatusNotice(text) {
+                while (statusNotice.lastChild) {
+                    statusNotice.removeChild(statusNotice.lastChild);
+                }
+                var lines = text.split('\n');
+                lines.forEach((line) => {
+                    statusNotice.appendChild(document.createTextNode(line));
+                    statusNotice.appendChild(document.createElement('br'));
+                });
+            }
+
+            function displayFailureNotice(err) {
+                var msg = err.message || err;
+                console.error(msg);
+                setStatusNotice(msg);
+                setStatusMode('notice');
+                initializing = false;
+            }
+
+            if (!Engine.isWebGLAvailable()) {
+                displayFailureNotice('WebGL not available');
+            } else {
+                setStatusMode('indeterminate');
+                if (window.PokiSDK && PokiSDK.gameLoadingStart) PokiSDK.gameLoadingStart();
+                engine.startGame({
+                    'onProgress': function (current, total) {
+                        if (total > 0) {
+                            statusProgressInner.style.width = current/total * 100 + '%';
+                            setStatusMode('progress');
+                            if (current === total) {
+                                setTimeout(() => {
+                                    setStatusMode('indeterminate');
+                                }, 500);
+                            }
+                        } else {
+                            setStatusMode('indeterminate');
+                        }
+                    },
+                }).then(() => {
+                    setStatusMode('hidden');
+                    initializing = false;
+                    if (window.PokiSDK && PokiSDK.gameLoadingFinished) PokiSDK.gameLoadingFinished();
+                }, displayFailureNotice);
+            }
+        }
+
+        if (window.PokiSDK && PokiSDK.init) {
+            PokiSDK.init().then(() => startGameLoading()).catch(() => startGameLoading());
+        } else {
+            startGameLoading();
+        }
+    </script>
+</body>
+</html>

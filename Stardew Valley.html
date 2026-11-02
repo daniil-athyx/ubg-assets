@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/degloved-net/stardew-wasm@main/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stardew Valley</title>
+
+    <script>
+        // --- Athyx Sitelock Security Guard ---
+        (function() {
+            var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+            var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+
+            function _isAuthorized() {
+                var current = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : "";
+                if (_domains.indexOf(current) !== -1) return true;
+
+                if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+                    for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+                        try {
+                            var aHost = new URL(window.location.ancestorOrigins[i]).hostname.toLowerCase();
+                            if (_domains.indexOf(aHost) !== -1) return true;
+                        } catch(e) {}
+                    }
+                    return false;
+                }
+
+                if (document.referrer) {
+                    try {
+                        var refHost = new URL(document.referrer).hostname.toLowerCase();
+                        if (_domains.indexOf(refHost) !== -1) return true;
+                    } catch(e) {}
+                }
+
+                try {
+                    if (window.parent && window.parent.location && window.parent.location.hostname) {
+                        if (_domains.indexOf(window.parent.location.hostname.toLowerCase()) !== -1) return true;
+                    }
+                } catch(e) {}
+
+                return false;
+            }
+
+            if (!_isAuthorized()) {
+                window.stop && window.stop();
+                document.documentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0e15;color:#fff;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="color:#f43f5e;font-size:32px;margin-bottom:12px;">Access Restricted</h1><p style="color:#94a3b8;font-size:16px;max-width:500px;line-height:1.6;margin:0 auto 24px;">This game is protected and authorized for playback exclusively on <b>Athyx Network</b>.</p><a href="https://athyx-network.web.app/" target="_blank" style="display:inline-block;background:#3b82f6;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;box-shadow:0 4px 14px rgba(59,130,246,0.4);">Play on Athyx Network</a></div></div>';
+                throw new Error("Athyx Sitelock: Unauthorized domain access blocked.");
+            }
+        })();
+    </script>
+
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 100vw; height: 100vh; overflow: hidden; background: #000; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        #loading {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font: 1.5rem/1.4 sans-serif;
+            z-index: 10;
+            flex-direction: column; gap: 1.25rem;
+            background: #0d1117;
+        }
+        #loading.hidden { display: none; }
+        #music-choice {
+            display: flex; flex-direction: column; align-items: center; gap: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2.5rem 3rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 12px 36px rgba(0,0,0,0.6);
+        }
+        #music-choice .title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #f6ad55;
+            letter-spacing: 0.5px;
+        }
+        #music-choice button {
+            font: 1.1rem/1.2 sans-serif; padding: 0.85rem 1.8rem;
+            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 10px;
+            background: #2563eb; color: #fff; cursor: pointer;
+            min-width: 290px; transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        #music-choice button:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.5);
+        }
+        #music-choice button#btn-no-music {
+            background: #334155;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        #music-choice button#btn-no-music:hover {
+            background: #475569;
+        }
+        #music-choice .hint { font-size: 0.85rem; opacity: 0.75; margin-left: 6px; }
+        canvas {
+            width: 100vw; height: 100vh; display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div id="music-choice">
+            <div class="title">Stardew Valley Web</div>
+            <div>Select download option:</div>
+            <button id="btn-no-music">Play without music <span class="hint">(~64 MB)</span></button>
+            <button id="btn-with-music">Play with music <span class="hint">(~540 MB)</span></button>
+        </div>
+    </div>
+    <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+    <script type="module" src="game.js"></script>
+</body>
+</html>

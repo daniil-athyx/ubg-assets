@@ -665,6 +665,11 @@
     "icon": "icons/spacebar_clicker.png"
   },
   {
+    "name": "Stardew Valley",
+    "path": "Stardew Valley.html",
+    "icon": "icons/stardew_valley.png"
+  },
+  {
     "name": "Stickman Hook",
     "path": "Stickman Hook.html",
     "icon": "icons/stickman_hook.png"
@@ -678,6 +683,11 @@
     "name": "Suika Game",
     "path": "Suika Game.html",
     "icon": "icons/suika_game.png"
+  },
+  {
+    "name": "Super Liquid Soccer",
+    "path": "Super Liquid Soccer.html",
+    "icon": "icons/super_liquid_soccer.png"
   },
   {
     "name": "Super Mario 64",
