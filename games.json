@@ -361,8 +361,23 @@
     },
     {
         "name": "Moto X3M",
-        "path": "Moto X3m.html",
+        "path": "Moto X3M.html",
         "icon": "icons/moto_x3m.png"
+    },
+    {
+        "name": "Moto X3M Pool Party",
+        "path": "Moto X3M Pool Party.html",
+        "icon": "icons/moto_x3m_pool_party.png"
+    },
+    {
+        "name": "Moto X3M Spooky Land",
+        "path": "Moto X3M Spooky Land.html",
+        "icon": "icons/moto_x3m_spooky_land.png"
+    },
+    {
+        "name": "Moto X3M Winter",
+        "path": "Moto X3M Winter.html",
+        "icon": "icons/moto_x3m_winter.png"
     },
     {
         "name": "Neon Balls",
@@ -688,6 +703,11 @@
         "name": "Tomb of the Mask",
         "path": "Tomb Of The Mask.html",
         "icon": "icons/tomb_of_the_mask.png"
+    },
+    {
+        "name": "Ultimate Custom Night",
+        "path": "Ultimate Custom Night.html",
+        "icon": "icons/ultimate_custom_night.png"
     },
     {
         "name": "Undertale Yellow",

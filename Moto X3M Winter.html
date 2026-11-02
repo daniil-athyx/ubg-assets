@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/3kh0/3kh0-lite@main/projects/motox3m-winter/">
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
+    <title>Moto X3M Winter</title>
+    <link rel="stylesheet" href="assets/css/app.css" type="text/css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+        }
+        #content, canvas {
+            width: 100vw !important;
+            height: 100vh !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #adContainer, .ad-banner { display: none !important; opacity: 0 !important; pointer-events: none !important; }
+    </style>
+
+    <script>
+        // --- Athyx Sitelock Security Guard ---
+        (function() {
+            var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+            var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+
+            function _isAuthorized() {
+                var current = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : "";
+                if (_domains.indexOf(current) !== -1) return true;
+
+                if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+                    for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+                        try {
+                            var aHost = new URL(window.location.ancestorOrigins[i]).hostname.toLowerCase();
+                            if (_domains.indexOf(aHost) !== -1) return true;
+                        } catch(e) {}
+                    }
+                    return false;
+                }
+
+                if (document.referrer) {
+                    try {
+                        var refHost = new URL(document.referrer).hostname.toLowerCase();
+                        if (_domains.indexOf(refHost) !== -1) return true;
+                    } catch(e) {}
+                }
+
+                try {
+                    if (window.parent && window.parent.location && window.parent.location.hostname) {
+                        if (_domains.indexOf(window.parent.location.hostname.toLowerCase()) !== -1) return true;
+                    }
+                } catch(e) {}
+
+                return false;
+            }
+
+            if (!_isAuthorized()) {
+                window.stop && window.stop();
+                document.documentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0e15;color:#fff;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="color:#f43f5e;font-size:32px;margin-bottom:12px;">Access Restricted</h1><p style="color:#94a3b8;font-size:16px;max-width:500px;line-height:1.6;margin:0 auto 24px;">This game is protected and authorized for playback exclusively on <b>Athyx Network</b>.</p><a href="https://athyx-network.web.app/" target="_blank" style="display:inline-block;background:#3b82f6;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;box-shadow:0 4px 14px rgba(59,130,246,0.4);">Play on Athyx Network</a></div></div>';
+                throw new Error("Athyx Sitelock: Unauthorized domain");
+            }
+        })();
+    </script>
+
+    <script>
+        // --- Athyx Ad-Free Shim & Mock SDK ---
+        window.PokiSDK = {
+            init: function() { return Promise.resolve(); },
+            gameLoadingStart: function() {},
+            gameLoadingFinished: function() {},
+            gameplayStart: function() {},
+            gameplayStop: function() {},
+            commercialBreak: function() { return Promise.resolve(); },
+            rewardedBreak: function() { return Promise.resolve(true); },
+            displayAd: function() {},
+            destroyAd: function() {},
+            getLeaderboard: function() { return Promise.resolve([]); },
+            happyTime: function() {}
+        };
+        window.gamebridge = {
+            requestAd: function(cb) { if (typeof cb === 'function') cb(); },
+            showStart: function() {},
+            showEnd: function() {}
+        };
+        window.google = window.google || {
+            ima: {
+                AdDisplayContainer: function() { return { initialize: function(){}, destroy: function(){} }; },
+                AdsLoader: function() { return { requestAds: function(){}, addEventListener: function(){}, destroy: function(){} }; },
+                AdsRequest: function() {},
+                ViewMode: { NORMAL: 'normal', FULLSCREEN: 'fullscreen' }
+            }
+        };
+    </script>
+
+</head>
+<body>
+    <div id="content"></div>
+    <div id="orientation"></div>
+    <div id="loader">Loading ...</div>
+
+    <script type="text/javascript" src="assets/box2dweb/nape.min.js">var nape = "nape.min.js";</script>
+    <script type="text/javascript" src="motox3m.min.js"></script>
+</body>
+</html>
