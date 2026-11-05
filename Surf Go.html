@@ -5,15 +5,59 @@
 <html lang="en-us">
 
 <head>
+    <script>
+        // --- Athyx Sitelock Security Guard ---
+        (function() {
+            var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+            var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+
+            function _isAuthorized() {
+                var current = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : "";
+                if (_domains.indexOf(current) !== -1) return true;
+
+                if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+                    for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+                        try {
+                            var aHost = new URL(window.location.ancestorOrigins[i]).hostname.toLowerCase();
+                            if (_domains.indexOf(aHost) !== -1) return true;
+                        } catch(e) {}
+                    }
+                    return false;
+                }
+
+                if (document.referrer) {
+                    try {
+                        var refHost = new URL(document.referrer).hostname.toLowerCase();
+                        if (_domains.indexOf(refHost) !== -1) return true;
+                    } catch(e) {}
+                }
+
+                try {
+                    if (window.parent && window.parent.location && window.parent.location.hostname) {
+                        if (_domains.indexOf(window.parent.location.hostname.toLowerCase()) !== -1) return true;
+                    }
+                } catch(e) {}
+
+                return false;
+            }
+
+            if (!_isAuthorized()) {
+                window.stop && window.stop();
+                document.documentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0e15;color:#fff;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="color:#f43f5e;font-size:32px;margin-bottom:12px;">Access Restricted</h1><p style="color:#94a3b8;font-size:16px;max-width:500px;line-height:1.6;margin:0 auto 24px;">This game is protected and authorized for playback exclusively on <b>Athyx Network</b>.</p><a href="https://athyx-network.web.app/" target="_blank" style="display:inline-block;background:#3b82f6;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;box-shadow:0 4px 14px rgba(59,130,246,0.4);">Play on Athyx Network</a></div></div>';
+                throw new Error("Athyx Sitelock: Unauthorized domain access blocked.");
+            }
+        })();
+    </script>
+
   <meta charset="utf-8" />
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>Surf GO</title>
   <link rel="shortcut icon"
-    href="https://cdn.jsdelivr.net/gh/athyx-network/athyx-game-lib@main/Surf%20Go/TemplateData/favicon.ico" />
-  <link href="https://cdn.jsdelivr.net/gh/athyx-network/athyx-game-lib@main/Surf%20Go/fonts/pixelify.css"
+    href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Surf%20Go/TemplateData/favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Surf%20Go/fonts/pixelify.css"
     rel="stylesheet" />
   <link rel="stylesheet"
-    href="https://cdn.jsdelivr.net/gh/athyx-network/athyx-game-lib@main/Surf%20Go/TemplateData/style.css" />
+    href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Surf%20Go/TemplateData/style.css" />
   <style>
     #athyx-loading-screen {
       position: fixed;
@@ -206,7 +250,7 @@
 
 <body>
   <div id="athyx-loading-screen">
-    <img id="athyx-logo" src="https://cdn.jsdelivr.net/gh/athyx-network/athyx-game-lib@main/Surf%20Go/logo.png"
+    <img id="athyx-logo" src="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Surf%20Go/logo.png"
       alt="Athyx Network" />
     <div id="athyx-bar-wrap">
       <div id="athyx-bar-inner"></div>
@@ -380,14 +424,14 @@
       return originalFetch(url, options);
     };
 
-    var buildUrl = "https://cdn.jsdelivr.net/gh/athyx-network/athyx-game-lib@main/Surf%20Go/Build";
+    var buildUrl = "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Surf%20Go/Build";
     var loaderUrl = buildUrl + "/db24fe51046f2eae7e7bdc07606e55d1.loader.js";
 
     var config = {
       dataUrl: buildUrl + "/2a15de349ac013cf02a58d5a0f3356b7.data",
       frameworkUrl: buildUrl + "/d9269ac45cb8d5de2795a664bf29db3a.framework.js",
       codeUrl: buildUrl + "/eaafa628ad4d4f6425b2eca2c950924c.wasm",
-      streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/athyx-network/athyx-game-lib@main/Surf%20Go/StreamingAssets",
+      streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/games/Surf%20Go/StreamingAssets",
       companyName: "Kot Games",
       productName: "Surf GO",
       productVersion: "3.506",
