@@ -5,6 +5,11 @@
     "icon": "icons/2048.png"
   },
   {
+    "name": "60 Seconds! Reatomized",
+    "path": "60 Seconds Reatomized.html",
+    "icon": "icons/60_seconds.png"
+  },
+  {
     "name": "A Small World Cup",
     "path": "A Small World Cup.html",
     "icon": "icons/a_small_world_cup.png"
@@ -283,6 +288,11 @@
     "path": "Granny 2.html",
     "name": "Granny 2",
     "icon": "icons/granny_2.jpg"
+  },
+  {
+    "name": "GTA: Vice City",
+    "path": "GTA Vice City.html",
+    "icon": "icons/gta_vice_city.png"
   },
   {
     "name": "Happy Wheels",

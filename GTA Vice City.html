@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en-us">
+
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/web-ports/vice-city@796678be4ed26a13c1256be98781ca9b90beb981/">
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <title>Grand Theft Auto: Vice City</title>
+
+    <script>
+        // --- Athyx Sitelock Security Guard ---
+        (function() {
+            var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+            var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+
+            function _isAuthorized() {
+                var current = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : "";
+                if (_domains.indexOf(current) !== -1) return true;
+
+                if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+                    for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+                        try {
+                            var aHost = new URL(window.location.ancestorOrigins[i]).hostname.toLowerCase();
+                            if (_domains.indexOf(aHost) !== -1) return true;
+                        } catch(e) {}
+                    }
+                    return false;
+                }
+
+                if (document.referrer) {
+                    try {
+                        var refHost = new URL(document.referrer).hostname.toLowerCase();
+                        if (_domains.indexOf(refHost) !== -1) return true;
+                    } catch(e) {}
+                }
+
+                try {
+                    if (window.parent && window.parent.location && window.parent.location.hostname) {
+                        if (_domains.indexOf(window.parent.location.hostname.toLowerCase()) !== -1) return true;
+                    }
+                } catch(e) {}
+
+                return false;
+            }
+
+            if (!_isAuthorized()) {
+                window.stop && window.stop();
+                document.documentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0e15;color:#fff;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="color:#f43f5e;font-size:32px;margin-bottom:12px;">Access Restricted</h1><p style="color:#94a3b8;font-size:16px;max-width:500px;line-height:1.6;margin:0 auto 24px;">This game is protected and authorized for playback exclusively on <b>Athyx Network</b>.</p><a href="https://athyx-network.web.app/" target="_blank" style="display:inline-block;background:#3b82f6;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;box-shadow:0 4px 14px rgba(59,130,246,0.4);">Play on Athyx Network</a></div></div>';
+                throw new Error("Athyx Sitelock: Unauthorized domain");
+            }
+        })();
+    </script>
+
+    <link rel="stylesheet" href="style.css">
+    <style>
+    html {
+        font-size: min(1.6vw, 2.45vh);
+    }
+
+    @media (max-aspect-ratio: 1/1) {
+        html {
+            font-size: min(3.5vw, 2vh);
+        }
+    }
+
+    #custom-startup-popup {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.72);
+        backdrop-filter: blur(10px);
+        z-index: 100000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        transition: opacity 0.3s ease;
+    }
+
+    .popup-content {
+        background: linear-gradient(145deg, #1e222d, #14161c);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 1.25rem;
+        padding: 1.875rem;
+        max-width: 48rem;
+        width: 90%;
+        max-height: 96%;
+        overflow-y: auto;
+        box-sizing: border-box;
+        color: white;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+    }
+
+    .popup-header {
+        display: flex;
+        gap: 1.25rem;
+        align-items: center;
+    }
+
+    .popup-icon {
+        width: 6.5rem;
+        height: 4rem;
+        flex-shrink: 0;
+        border-radius: 0.75rem;
+        object-fit: cover;
+        box-shadow: 0 0 15px rgba(255,255,255,0.12);
+        background: #333;
+    }
+
+    .popup-title-area {
+        flex-grow: 1;
+    }
+
+    .popup-title-area h1 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1.75rem;
+        font-weight: 800;
+    }
+
+    .popup-title-area p {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #a0a5b1;
+        line-height: 1.5;
+    }
+
+    .popup-btn {
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.625rem;
+        font-weight: bold;
+        font-size: 0.9375rem;
+        cursor: pointer;
+        transition: transform 0.1s, filter 0.2s;
+    }
+
+    .popup-btn:hover {
+        filter: brightness(1.1);
+        transform: translateY(-2px);
+    }
+
+    .popup-btn:active {
+        transform: translateY(0);
+    }
+
+    .btn-start {
+        background: #6df496;
+        color: #0b3d1b;
+    }
+
+    .popup-tips {
+        display: flex;
+        flex-direction: column;
+        gap: 0.625rem;
+    }
+
+    .popup-tip {
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(255,255,255,0.08);
+        padding: 0.75rem 1.25rem;
+        border-radius: 0.625rem;
+        font-size: 0.8125rem;
+        font-weight: 600;
+    }
+
+    .popup-footer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.625rem;
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #e0e0e0;
+    }
+    </style>
+</head>
+
+<body
+    data-is-touch="0"
+    data-state-car="0"
+    data-state-car-gun="0"
+    data-state-gun="0"
+    data-state-bike="0"
+    data-state-menu="1"
+    data-state-cutscene="0"
+    data-state-mobring="0"
+    data-state-job="0"
+    data-state-disable-controls="0"
+    data-state-panzer="0"
+    data-state-car-with-weapon="0"
+    data-state-hunter="0"
+    data-state-scope-mode="0"
+    data-state-scope-gun="0"
+>
+    <!-- Startup Popup -->
+    <div id="custom-startup-popup">
+        <div class="popup-content">
+            <div class="popup-header">
+                <img src="https://cdn.jsdelivr.net/gh/daniil-athyx/ubg-assets@main/icons/gta_vice_city.png" class="popup-icon" alt="GTA Vice City">
+                <div class="popup-title-area">
+                    <h1>Grand Theft Auto: Vice City</h1>
+                    <p>Play the full web port in your browser. Files are cached locally after the first download so repeat launches are instant.</p>
+                </div>
+            </div>
+            
+            <div class="popup-tips">
+                <div class="popup-tip">Tip: If controls do nothing, click inside the game canvas a few times to lock pointer focus.</div>
+                <div class="popup-tip">Note: First-time load downloads ~633 MB of game & radio assets into browser storage.</div>
+            </div>
+
+            <div class="popup-footer">
+                <button class="popup-btn btn-start" id="popup-start-btn" style="width: 100%; padding: 1.125rem; font-size: 1.25rem; border-radius: 0.75rem; text-transform: uppercase; letter-spacing: 0.0625rem;">Start Game</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading-text" style="color: white; font-size: 36px; font-family: sans-serif; font-weight: bold; text-align: center; margin-top: 20px;"> LOADING... </div>
+    <div class="wasted-container" hidden></div>
+    <div class="intro-container" hidden>
+        <div class="loader-container">
+            <div class="progress-bar-container" id='spinner'>
+                <div class="progress-bar-fill"></div>
+            </div>
+            <div id="status">Downloading...</div>
+            <div>
+                <progress id="progress"></progress>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="original-game-file" hidden>
+
+    <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+
+    <div class="touch-controls-wrapper">
+        <div id="move"></div>
+        <div id="look"></div>
+
+        <div class="touch-control radio"></div>
+        <div class="touch-control weapon"></div>
+        <div class="touch-control menu"></div>
+        <div class="touch-control fist"></div>
+        <div class="touch-control drift"></div>
+        <div class="touch-control run"></div>
+        <div class="touch-control car getIn"></div>
+        <div class="touch-control left"></div>
+        <div class="touch-control right"></div>
+        <div class="touch-control jump"></div>
+        <div class="touch-control car getOut"></div>
+        <div class="touch-control camera"></div>
+        <div class="touch-control mobile"></div>
+        <div class="touch-control job"></div>
+        <div class="touch-control horn"></div>
+        <div class="touch-control fireRight"></div>
+        <div class="touch-control fireLeft"></div>
+    </div>
+
+<script>
+const loadingText = document.querySelector("#loading-text");
+let loadedBytes = 0;
+const DB_NAME = "gameFilesDB_v2";
+const STORE_NAME = "files";
+
+function openDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+        request.onupgradeneeded = e => {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains(STORE_NAME)) {
+                db.createObjectStore(STORE_NAME);
+            }
+        };
+        request.onsuccess = e => resolve(e.target.result);
+        request.onerror = e => reject(e.target.error);
+    });
+}
+
+async function saveFile(name, buffer) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readwrite");
+        const store = tx.objectStore(STORE_NAME);
+        store.put(buffer, name);
+        tx.oncomplete = () => resolve();
+        tx.onerror = e => reject(e.target.error);
+    });
+}
+
+async function getFile(name) {
+    const db = await openDB();
+    return new Promise((resolve, reject) => {
+        const tx = db.transaction(STORE_NAME, "readonly");
+        const store = tx.objectStore(STORE_NAME);
+        const request = store.get(name);
+        request.onsuccess = e => resolve(e.target.result);
+        request.onerror = e => reject(e.target.error);
+    });
+}
+
+async function fetchWithCache(name, url) {
+    try {
+        let cached = await getFile(name);
+        if (cached) return cached;
+    } catch (e) {}
+
+    const response = await fetch(url);
+    const reader = response.body.getReader();
+    let chunks = [];
+    let received = 0;
+
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        received += value.length;
+        loadedBytes += value.length;
+        chunks.push(value);
+
+        let mbDone = (loadedBytes / (1024 * 1024)).toFixed(2);
+        let mbTotal = '633.45';
+        loadingText.textContent = `LOADING... ${mbDone} MB / ${mbTotal} MB`;
+    }
+
+    let fullBuffer = new Uint8Array(received);
+    let offset = 0;
+    for (let chunk of chunks) {
+        fullBuffer.set(chunk, offset);
+        offset += chunk.length;
+    }
+
+    try { await saveFile(name, fullBuffer.buffer); } catch (e) {}
+    return fullBuffer.buffer;
+}
+
+async function mergeFiles(fileParts, namePrefix) {
+    const buffers = [];
+    for (let i = 0; i < fileParts.length; i++) {
+        const buffer = await fetchWithCache(`${namePrefix}.part${i+1}`, fileParts[i]);
+        buffers.push(buffer);
+    }
+    const mergedBlob = new Blob(buffers);
+    return URL.createObjectURL(mergedBlob);
+}
+
+function getParts(file, start, end) {
+    let parts = [];
+    const baseUrl = "https://cdn.jsdelivr.net/gh/web-ports/vice-city@796678be4ed26a13c1256be98781ca9b90beb981/";
+    for (let i = start; i <= end; i++) {
+        parts.push(baseUrl + file + ".part" + i);
+    }
+    return parts;
+}
+
+function startGameProcess() {
+    loadingText.textContent = "LOADING...";
+    Promise.all([
+        mergeFiles(getParts("index.data", 1, 7), "index.data"),
+        mergeFiles(getParts("audio/emotion.adf", 1, 3), "emotion.adf"),
+        mergeFiles(getParts("audio/espant.adf", 1, 3), "espant.adf"),
+        mergeFiles(getParts("audio/fever.adf", 1, 3), "fever.adf"),
+        mergeFiles(getParts("audio/flash.adf", 1, 3), "flash.adf"),
+        mergeFiles(getParts("audio/kchat.adf", 1, 3), "kchat.adf"),
+        mergeFiles(getParts("audio/vcpr.adf", 1, 2), "vcpr.adf"),
+        mergeFiles(getParts("audio/vrock.adf", 1, 4), "vrock.adf"),
+        mergeFiles(getParts("audio/wave.adf", 1, 4), "wave.adf"),
+        mergeFiles(getParts("audio/wild.adf", 1, 4), "wild.adf"),
+    ]).then(([indexdataurl, EMOTIONadfurl, ESPANTadfurl, FEVERadfurl, FLASHadfurl, KCHATadfurl, VCPRadfurl, VROCKadfurl, WAVEadfurl, WILDadfurl]) => {
+        const originalFetch = window.fetch;
+        window.fetch = async function(input, init) {
+            let urlString = input instanceof Request ? input.url : String(input);
+
+            if (urlString.toLowerCase().includes("index.data")) input = indexdataurl;
+            else if (urlString.toLowerCase().includes("emotion.adf")) input = EMOTIONadfurl;
+            else if (urlString.toLowerCase().includes("espant.adf")) input = ESPANTadfurl;
+            else if (urlString.toLowerCase().includes("fever.adf")) input = FEVERadfurl;
+            else if (urlString.toLowerCase().includes("flash.adf")) input = FLASHadfurl;
+            else if (urlString.toLowerCase().includes("kchat.adf")) input = KCHATadfurl;
+            else if (urlString.toLowerCase().includes("vcpr.adf")) input = VCPRadfurl;
+            else if (urlString.toLowerCase().includes("vrock.adf")) input = VROCKadfurl;
+            else if (urlString.toLowerCase().includes("wave.adf")) input = WAVEadfurl;
+            else if (urlString.toLowerCase().includes("wild.adf")) input = WILDadfurl;
+
+            return originalFetch(typeof input === "string" ? input.toLowerCase() : input, init);
+        };
+
+        const originalOpen = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function(method, url, ...rest) {
+            if (url.includes("https://cdn.dos.zone/vcsky/fetched/")) url = url.replace("https://cdn.dos.zone/vcsky/fetched/", "");
+            if (url.toLowerCase().includes("index.data")) url = indexdataurl;
+            else if (url.toLowerCase().includes("emotion.adf")) url = EMOTIONadfurl;
+            else if (url.toLowerCase().includes("espant.adf")) url = ESPANTadfurl;
+            else if (url.toLowerCase().includes("fever.adf")) url = FEVERadfurl;
+            else if (url.toLowerCase().includes("flash.adf")) url = FLASHadfurl;
+            else if (url.toLowerCase().includes("kchat.adf")) url = KCHATadfurl;
+            else if (url.toLowerCase().includes("vcpr.adf")) url = VCPRadfurl;
+            else if (url.toLowerCase().includes("vrock.adf")) url = VROCKadfurl;
+            else if (url.toLowerCase().includes("wave.adf")) url = WAVEadfurl;
+            else if (url.toLowerCase().includes("wild.adf")) url = WILDadfurl;
+            return originalOpen.call(this, method, url.toLowerCase(), ...rest);
+        };
+
+        ["idbfs.js", "game.js"].forEach(src => {
+            const script = document.createElement("script");
+            script.src = src;
+            document.body.appendChild(script);
+        });
+
+        loadingText.innerHTML = "Download Complete!";
+
+        const clickHint = document.createElement("div");
+        clickHint.innerHTML = "If loading is stuck, <span style='color: #ffeb3b; text-decoration: underline;'>Click Here</span> to start the game!";
+        clickHint.style.position = "absolute";
+        clickHint.style.top = "60%";
+        clickHint.style.left = "50%";
+        clickHint.style.transform = "translate(-50%, -50%)";
+        clickHint.style.color = "white";
+        clickHint.style.fontSize = "26px";
+        clickHint.style.fontFamily = "sans-serif";
+        clickHint.style.zIndex = "9999";
+        clickHint.style.pointerEvents = "none";
+        clickHint.style.textShadow = "2px 2px 4px #000000";
+        document.body.appendChild(clickHint);
+
+        window.addEventListener("pointerdown", () => {
+            if (loadingText.parentNode) loadingText.remove();
+            if (clickHint.parentNode) clickHint.remove();
+        }, { once: true });
+    });
+}
+
+document.getElementById('popup-start-btn').addEventListener('click', () => {
+    const popup = document.getElementById('custom-startup-popup');
+    popup.style.opacity = '0';
+    setTimeout(() => popup.remove(), 300);
+    startGameProcess();
+});
+</script>
+
+</body>
+</html>

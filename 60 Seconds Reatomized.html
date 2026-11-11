@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>60 Seconds! Reatomized</title>
+
+  <script>
+    // --- Athyx Sitelock Security Guard ---
+    (function() {
+      var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+      var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+
+      function _isAuthorized() {
+        var current = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : "";
+        if (_domains.indexOf(current) !== -1) return true;
+
+        if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+          for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+            try {
+              var aHost = new URL(window.location.ancestorOrigins[i]).hostname.toLowerCase();
+              if (_domains.indexOf(aHost) !== -1) return true;
+            } catch(e) {}
+          }
+          return false;
+        }
+
+        if (document.referrer) {
+          try {
+            var refHost = new URL(document.referrer).hostname.toLowerCase();
+            if (_domains.indexOf(refHost) !== -1) return true;
+          } catch(e) {}
+        }
+
+        try {
+          if (window.parent && window.parent.location && window.parent.location.hostname) {
+            if (_domains.indexOf(window.parent.location.hostname.toLowerCase()) !== -1) return true;
+          }
+        } catch(e) {}
+
+        return false;
+      }
+
+      if (!_isAuthorized()) {
+        window.stop && window.stop();
+        document.documentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0e15;color:#fff;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="color:#f43f5e;font-size:32px;margin-bottom:12px;">Access Restricted</h1><p style="color:#94a3b8;font-size:16px;max-width:500px;line-height:1.6;margin:0 auto 24px;">This game is protected and authorized for playback exclusively on <b>Athyx Network</b>.</p><a href="https://athyx-network.web.app/" target="_blank" style="display:inline-block;background:#3b82f6;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;box-shadow:0 4px 14px rgba(59,130,246,0.4);">Play on Athyx Network</a></div></div>';
+        throw new Error("Athyx Sitelock: Unauthorized domain");
+      }
+    })();
+  </script>
+
+  <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/usheje883-maker/60-Seconds-Webport@4a1ebbeb5d93e269e12530cd6f56fae314cea8f0/Image.png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/usheje883-maker/60-Seconds-Webport@4a1ebbeb5d93e269e12530cd6f56fae314cea8f0/TemplateData/style.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #000;
+    }
+    #unity-container {
+      width: 100vw !important;
+      height: 100vh !important;
+      position: fixed !important;
+      inset: 0 !important;
+    }
+    #unity-canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+      background: #231F20;
+    }
+    #loading-status {
+      position: fixed;
+      top: calc(50% + 95px);
+      left: 50%;
+      transform: translateX(-50%);
+      color: #facc15;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      z-index: 20;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="unity-container" class="unity-desktop">
+    <canvas id="unity-canvas"></canvas>
+    <div id="unity-loading-bar">
+      <div id="unity-logo"></div>
+      <div id="unity-progress-bar-empty">
+        <div id="unity-progress-bar-full"></div>
+      </div>
+    </div>
+    <div id="loading-status">Fetching game chunks (0/6)...</div>
+    <div id="unity-warning"></div>
+  </div>
+
+  <script>
+    var container = document.querySelector("#unity-container");
+    var canvas = document.querySelector("#unity-canvas");
+    var loadingBar = document.querySelector("#unity-loading-bar");
+    var progressBarFull = document.querySelector("#unity-progress-bar-full");
+    var warningBanner = document.querySelector("#unity-warning");
+    var loadingStatus = document.querySelector("#loading-status");
+
+    function unityShowBanner(msg, type) {
+      function updateBannerVisibility() {
+        warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+      }
+      var div = document.createElement('div');
+      div.innerHTML = msg;
+      warningBanner.appendChild(div);
+      if (type == 'error') div.style = 'background: red; padding: 10px; color: white;';
+      else {
+        if (type == 'warning') div.style = 'background: yellow; padding: 10px; color: black;';
+        setTimeout(function() {
+          if (div.parentNode) warningBanner.removeChild(div);
+          updateBannerVisibility();
+        }, 5000);
+      }
+      updateBannerVisibility();
+    }
+
+    var baseUrl = "https://cdn.jsdelivr.net/gh/usheje883-maker/60-Seconds-Webport@4a1ebbeb5d93e269e12530cd6f56fae314cea8f0/";
+    var buildUrl = baseUrl + "Build";
+    var loaderUrl = buildUrl + "/Build.loader.js";
+    loadingBar.style.display = "block";
+
+    var dataFiles = [
+      "Build.data.unityweb.0",
+      "Build.data.unityweb.1",
+      "Build.data.unityweb.2",
+      "Build.data.unityweb.3",
+      "Build.data.unityweb.4",
+      "Build.data.unityweb.5"
+    ];
+    var doneCount = 0;
+
+    Promise.all(dataFiles.map(function(f) {
+      return fetch(buildUrl + "/" + f).then(function(r) {
+        if (!r.ok) throw Error("Failed " + f);
+        return r.arrayBuffer();
+      }).then(function(buf) {
+        doneCount++;
+        if (loadingStatus) loadingStatus.textContent = "Fetching game chunks (" + doneCount + "/" + dataFiles.length + ")...";
+        if (progressBarFull) progressBarFull.style.width = ((doneCount / dataFiles.length) * 50) + "%";
+        return buf;
+      });
+    })).then(function(parts) {
+      if (loadingStatus) loadingStatus.textContent = "Initializing Unity WebGL...";
+      var total = parts.reduce(function(s, b) { return s + b.byteLength; }, 0);
+      var combined = new Uint8Array(total);
+      var off = 0;
+      parts.forEach(function(buf) { combined.set(new Uint8Array(buf), off); off += buf.byteLength; });
+      var dataBlob = URL.createObjectURL(new Blob([combined]));
+
+      var config = {
+        dataUrl: dataBlob,
+        frameworkUrl: buildUrl + "/Build.framework.js.unityweb",
+        codeUrl: buildUrl + "/Build.wasm.unityweb",
+        streamingAssetsUrl: baseUrl + "StreamingAssets",
+        companyName: "Robot Gentleman",
+        productName: "60 Seconds",
+        productVersion: "1.0",
+        showBanner: unityShowBanner
+      };
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        container.className = "unity-mobile";
+        config.devicePixelRatio = 1;
+      }
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = function() {
+        createUnityInstance(canvas, config, function(progress) {
+          progressBarFull.style.width = (50 + 50 * progress) + "%";
+        }).then(function(unityInstance) {
+          loadingBar.style.display = "none";
+          if (loadingStatus) loadingStatus.remove();
+        }).catch(function(message) {
+          if (loadingStatus) loadingStatus.textContent = "Error: " + message;
+          unityShowBanner(message, "error");
+        });
+      };
+      document.body.appendChild(script);
+    }).catch(function(err) {
+      if (loadingStatus) loadingStatus.textContent = "Failed to load game: " + err.message;
+    });
+  </script>
+</body>
+</html>
