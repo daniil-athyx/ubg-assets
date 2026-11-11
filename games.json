@@ -645,6 +645,11 @@
     "icon": "icons/slope_2.png"
   },
   {
+    "name": "Slyth.io",
+    "path": "Slyth.io.html",
+    "icon": "icons/slyth_io.png"
+  },
+  {
     "name": "Smash Karts",
     "path": "Smash Karts.html",
     "icon": "icons/smash_karts.png"
