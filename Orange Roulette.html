@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/ubg-assets@main/orange-roulette/">
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Orange Roulette</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      font-family: Arial, sans-serif;
+    }
+    #flash-container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
+    ruffle-player {
+      width: 100% !important;
+      height: 100% !important;
+      background: #000;
+      display: block;
+    }
+    #loading-msg {
+      color: #ff8c00;
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      text-align: center;
+    }
+  </style>
+
+  <script>
+    // --- Athyx Sitelock Security Guard ---
+    (function() {
+      var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+      var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+
+      function _isAuthorized() {
+        var current = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : "";
+        if (_domains.indexOf(current) !== -1) return true;
+
+        if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+          for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+            try {
+              var aHost = new URL(window.location.ancestorOrigins[i]).hostname.toLowerCase();
+              if (_domains.indexOf(aHost) !== -1) return true;
+            } catch(e) {}
+          }
+          return false;
+        }
+
+        if (document.referrer) {
+          try {
+            var refHost = new URL(document.referrer).hostname.toLowerCase();
+            if (_domains.indexOf(refHost) !== -1) return true;
+          } catch(e) {}
+        }
+
+        try {
+          if (window.parent && window.parent.location && window.parent.location.hostname) {
+            if (_domains.indexOf(window.parent.location.hostname.toLowerCase()) !== -1) return true;
+          }
+        } catch(e) {}
+
+        return false;
+      }
+
+      if (!_isAuthorized()) {
+        window.stop && window.stop();
+        document.documentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0e15;color:#fff;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="color:#f43f5e;font-size:32px;margin-bottom:12px;">Access Restricted</h1><p style="color:#94a3b8;font-size:16px;max-width:500px;line-height:1.6;margin:0 auto 24px;">This game is protected and authorized for playback exclusively on <b>Athyx Network</b>.</p><a href="https://athyx-network.web.app/" target="_blank" style="display:inline-block;background:#3b82f6;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;box-shadow:0 4px 14px rgba(59,130,246,0.4);">Play on Athyx Network</a></div></div>';
+        throw new Error("Athyx Sitelock: Unauthorized domain");
+      }
+    })();
+  </script>
+</head>
+<body>
+  <div id="loading-msg">LOADING ORANGE ROULETTE...</div>
+  <div id="flash-container"></div>
+  <script>
+    window.RufflePlayer = window.RufflePlayer || {};
+    window.RufflePlayer.config = {
+      autoplay: "on",
+      unmuteOverlay: "hidden",
+      backgroundColor: "#000000",
+      letterbox: "on",
+      scale: "showAll"
+    };
+
+    (async function() {
+      var loadingMsg = document.getElementById("loading-msg");
+      try {
+        await new Promise(function(resolve, reject) {
+          var s = document.createElement("script");
+          s.src = "https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle/ruffle.min.js";
+          s.onload = resolve;
+          s.onerror = function() {
+            var s2 = document.createElement("script");
+            s2.src = "https://unpkg.com/@ruffle-rs/ruffle";
+            s2.onload = resolve;
+            s2.onerror = reject;
+            document.head.appendChild(s2);
+          };
+          document.head.appendChild(s);
+        });
+
+        var container = document.getElementById("flash-container");
+        var ruffle = window.RufflePlayer.newest();
+        var player = ruffle.createPlayer();
+        player.style.width = "100%";
+        player.style.height = "100%";
+        container.appendChild(player);
+
+        var swfRes = await fetch("https://cdn.jsdelivr.net/gh/daniil-athyx/ubg-assets@main/orange-roulette/orange-roulette.swf");
+        if (!swfRes.ok) throw new Error("Failed to fetch game (" + swfRes.status + ")");
+        var swfBuf = await swfRes.arrayBuffer();
+        if (loadingMsg) loadingMsg.remove();
+        await player.load({ data: new Uint8Array(swfBuf) });
+      } catch (err) {
+        console.error(err);
+        if (loadingMsg) loadingMsg.textContent = "Error loading game: " + err.message;
+      }
+    })();
+  </script>
+</body>
+</html>

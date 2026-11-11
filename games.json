@@ -415,6 +415,11 @@
     "icon": "icons/oneshot_royale.jpg"
   },
   {
+    "name": "Orange Roulette",
+    "path": "Orange Roulette.html",
+    "icon": "icons/orange_roulette.png"
+  },
+  {
     "name": "Osu",
     "path": "Osu.html",
     "icon": "icons/osu.png"
