@@ -438,9 +438,15 @@ function startGameProcess() {
             return originalOpen.call(this, method, normalizedUrl, ...rest);
         };
 
-        ["idbfs.js", "game.js"].forEach(src => {
+        if (navigator.keyboard && navigator.keyboard.lock) {
+            const origLock = navigator.keyboard.lock.bind(navigator.keyboard);
+            navigator.keyboard.lock = (...args) => origLock(...args).catch(() => {});
+        }
+
+        ["GamepadEmulator.js", "idbfs.js", "game.js"].forEach(src => {
             const script = document.createElement("script");
             script.src = src;
+            script.async = false;
             document.body.appendChild(script);
         });
 
