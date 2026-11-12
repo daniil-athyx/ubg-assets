@@ -304,35 +304,54 @@ async function getFile(name) {
 async function fetchWithCache(name, url) {
     try {
         let cached = await getFile(name);
-        if (cached) return cached;
+        if (cached) {
+            loadedBytes += cached.byteLength || 0;
+            return cached;
+        }
     } catch (e) {}
 
-    const response = await fetch(url);
-    const reader = response.body.getReader();
-    let chunks = [];
-    let received = 0;
+    const maxAttempts = 4;
+    let lastErr;
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        let received = 0;
+        try {
+            const response = await fetch(url);
+            if (!response.ok || !response.body) {
+                throw new Error(`HTTP ${response.status} while fetching ${name}`);
+            }
+            const reader = response.body.getReader();
+            const chunks = [];
 
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        received += value.length;
-        loadedBytes += value.length;
-        chunks.push(value);
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                received += value.length;
+                loadedBytes += value.length;
+                chunks.push(value);
 
-        let mbDone = (loadedBytes / (1024 * 1024)).toFixed(2);
-        let mbTotal = '633.45';
-        loadingText.textContent = `LOADING... ${mbDone} MB / ${mbTotal} MB`;
+                let mbDone = (loadedBytes / (1024 * 1024)).toFixed(2);
+                let mbTotal = '633.45';
+                loadingText.textContent = `LOADING... ${mbDone} MB / ${mbTotal} MB`;
+            }
+
+            const fullBuffer = new Uint8Array(received);
+            let offset = 0;
+            for (const chunk of chunks) {
+                fullBuffer.set(chunk, offset);
+                offset += chunk.length;
+            }
+
+            try { await saveFile(name, fullBuffer.buffer); } catch (e) {}
+            return fullBuffer.buffer;
+        } catch (err) {
+            loadedBytes = Math.max(0, loadedBytes - received);
+            lastErr = err;
+            if (attempt < maxAttempts) {
+                await new Promise(r => setTimeout(r, 750 * attempt));
+            }
+        }
     }
-
-    let fullBuffer = new Uint8Array(received);
-    let offset = 0;
-    for (let chunk of chunks) {
-        fullBuffer.set(chunk, offset);
-        offset += chunk.length;
-    }
-
-    try { await saveFile(name, fullBuffer.buffer); } catch (e) {}
-    return fullBuffer.buffer;
+    throw lastErr;
 }
 
 async function mergeFiles(fileParts, namePrefix) {
@@ -354,20 +373,35 @@ function getParts(file, start, end) {
     return parts;
 }
 
+async function runWithConcurrency(tasks, limit) {
+    const results = new Array(tasks.length);
+    let nextIndex = 0;
+    async function worker() {
+        while (nextIndex < tasks.length) {
+            const idx = nextIndex++;
+            results[idx] = await tasks[idx]();
+        }
+    }
+    const workers = Array.from({ length: Math.min(limit, tasks.length) }, () => worker());
+    await Promise.all(workers);
+    return results;
+}
+
 function startGameProcess() {
     loadingText.textContent = "LOADING...";
-    Promise.all([
-        mergeFiles(getParts("index.data", 1, 7), "index.data"),
-        mergeFiles(getParts("audio/emotion.adf", 1, 3), "emotion.adf"),
-        mergeFiles(getParts("audio/espant.adf", 1, 3), "espant.adf"),
-        mergeFiles(getParts("audio/fever.adf", 1, 3), "fever.adf"),
-        mergeFiles(getParts("audio/flash.adf", 1, 3), "flash.adf"),
-        mergeFiles(getParts("audio/kchat.adf", 1, 3), "kchat.adf"),
-        mergeFiles(getParts("audio/vcpr.adf", 1, 2), "vcpr.adf"),
-        mergeFiles(getParts("audio/vrock.adf", 1, 4), "vrock.adf"),
-        mergeFiles(getParts("audio/wave.adf", 1, 4), "wave.adf"),
-        mergeFiles(getParts("audio/wild.adf", 1, 4), "wild.adf"),
-    ]).then(([indexdataurl, EMOTIONadfurl, ESPANTadfurl, FEVERadfurl, FLASHadfurl, KCHATadfurl, VCPRadfurl, VROCKadfurl, WAVEadfurl, WILDadfurl]) => {
+    const assetJobs = [
+        () => mergeFiles(getParts("index.data", 1, 7), "index.data"),
+        () => mergeFiles(getParts("audio/emotion.adf", 1, 3), "emotion.adf"),
+        () => mergeFiles(getParts("audio/espant.adf", 1, 3), "espant.adf"),
+        () => mergeFiles(getParts("audio/fever.adf", 1, 3), "fever.adf"),
+        () => mergeFiles(getParts("audio/flash.adf", 1, 3), "flash.adf"),
+        () => mergeFiles(getParts("audio/kchat.adf", 1, 3), "kchat.adf"),
+        () => mergeFiles(getParts("audio/vcpr.adf", 1, 2), "vcpr.adf"),
+        () => mergeFiles(getParts("audio/vrock.adf", 1, 4), "vrock.adf"),
+        () => mergeFiles(getParts("audio/wave.adf", 1, 4), "wave.adf"),
+        () => mergeFiles(getParts("audio/wild.adf", 1, 4), "wild.adf"),
+    ];
+    runWithConcurrency(assetJobs, 2).then(([indexdataurl, EMOTIONadfurl, ESPANTadfurl, FEVERadfurl, FLASHadfurl, KCHATadfurl, VCPRadfurl, VROCKadfurl, WAVEadfurl, WILDadfurl]) => {
         const originalFetch = window.fetch;
         window.fetch = async function(input, init) {
             let urlString = input instanceof Request ? input.url : String(input);
@@ -383,7 +417,8 @@ function startGameProcess() {
             else if (urlString.toLowerCase().includes("wave.adf")) input = WAVEadfurl;
             else if (urlString.toLowerCase().includes("wild.adf")) input = WILDadfurl;
 
-            return originalFetch(typeof input === "string" ? input.toLowerCase() : input, init);
+            const normalizedInput = (typeof input === "string" && !input.startsWith("blob:")) ? input.toLowerCase() : input;
+            return originalFetch(normalizedInput, init);
         };
 
         const originalOpen = XMLHttpRequest.prototype.open;
@@ -399,7 +434,8 @@ function startGameProcess() {
             else if (url.toLowerCase().includes("vrock.adf")) url = VROCKadfurl;
             else if (url.toLowerCase().includes("wave.adf")) url = WAVEadfurl;
             else if (url.toLowerCase().includes("wild.adf")) url = WILDadfurl;
-            return originalOpen.call(this, method, url.toLowerCase(), ...rest);
+            const normalizedUrl = (typeof url === "string" && !url.startsWith("blob:")) ? url.toLowerCase() : url;
+            return originalOpen.call(this, method, normalizedUrl, ...rest);
         };
 
         ["idbfs.js", "game.js"].forEach(src => {
@@ -428,6 +464,9 @@ function startGameProcess() {
             if (loadingText.parentNode) loadingText.remove();
             if (clickHint.parentNode) clickHint.remove();
         }, { once: true });
+    }).catch(err => {
+        loadingText.textContent = "Failed to load game files. Please refresh and try again.";
+        console.error("Vice City load error:", err);
     });
 }
 
