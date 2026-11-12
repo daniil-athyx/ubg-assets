@@ -70,23 +70,62 @@
     </script>
 
     <script>
-        // --- Athyx Ad-Free Shim & Mock SDK ---
+        // --- Athyx WebGL CORS Fix & Ad-Free Shim / Mock SDK ---
+        (function() {
+            var srcDesc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+            if (srcDesc && srcDesc.set) {
+                Object.defineProperty(HTMLImageElement.prototype, 'src', {
+                    configurable: true,
+                    enumerable: srcDesc.enumerable,
+                    get: srcDesc.get,
+                    set: function(val) {
+                        if (typeof val === 'string' && !val.startsWith('data:') && !val.startsWith('blob:')) {
+                            try { this.crossOrigin = 'anonymous'; } catch(e) {}
+                        }
+                        return srcDesc.set.call(this, val);
+                    }
+                });
+            }
+            var OrigImage = window.Image;
+            window.Image = function(w, h) {
+                var img = new OrigImage(w, h);
+                try { img.crossOrigin = 'anonymous'; } catch(e) {}
+                return img;
+            };
+            window.Image.prototype = OrigImage.prototype;
+        })();
         window.PokiSDK = {
             init: function() { return Promise.resolve(); },
             gameLoadingStart: function() {},
+            gameLoadingProgress: function() {},
             gameLoadingFinished: function() {},
+            gameInteractive: function() {},
             gameplayStart: function() {},
             gameplayStop: function() {},
+            roundStart: function() {},
+            roundEnd: function() {},
+            customEvent: function() {},
+            setDebug: function() {},
+            measure: function() {},
+            muteAd: function() {},
             commercialBreak: function() { return Promise.resolve(); },
             rewardedBreak: function() { return Promise.resolve(true); },
             displayAd: function() {},
             destroyAd: function() {},
+            isAdBlocked: function() { return false; },
             getLeaderboard: function() { return Promise.resolve([]); },
             happyTime: function() {}
         };
         window.gamebridge = {
+            ready: true,
             requestAd: function(cb) { if (typeof cb === 'function') cb(); },
             showStart: function() {},
+            showPreroll: function() { return Promise.resolve(); },
+            showPause: function() {},
+            showAd: function() { return Promise.resolve(); },
+            showNext: function() { return Promise.resolve(); },
+            showBrowse: function() {},
+            showReward: function() { return Promise.resolve(true); },
             showEnd: function() {}
         };
         window.google = window.google || {

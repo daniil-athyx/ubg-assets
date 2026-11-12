@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@d7f8079f5d979182e04f05b1ade24f2a757253a3/football%20bros/">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Football Bros</title>
+    <script>
+        // --- Athyx Sitelock Security Guard ---
+        (function() {
+            var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+            var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+            function _isAuthorized() {
+                try {
+                    var host = (window.location.hostname || "").toLowerCase();
+                    if (host && _domains.some(function(d) { return d && (host === d || host.endsWith("." + d)); })) return true;
+                    if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+                        for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+                            var ao = window.location.ancestorOrigins[i].toLowerCase();
+                            if (_domains.some(function(d) { return d && ao.indexOf(d) !== -1; })) return true;
+                        }
+                    }
+                    if (document.referrer) {
+                        var ref = document.referrer.toLowerCase();
+                        if (_domains.some(function(d) { return d && ref.indexOf(d) !== -1; })) return true;
+                    }
+                    try {
+                        if (window.parent && window.parent !== window) {
+                            var phost = window.parent.location.hostname.toLowerCase();
+                            if (_domains.some(function(d) { return d && (phost === d || phost.endsWith("." + d)); })) return true;
+                        }
+                    } catch(e) {}
+                } catch(e) {}
+                return false;
+            }
+            if (!_isAuthorized()) {
+                window.stop && window.stop();
+                document.documentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0e15;color:#fff;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="color:#f43f5e;font-size:32px;margin-bottom:12px;">Access Restricted</h1><p style="color:#94a3b8;font-size:16px;max-width:500px;line-height:1.6;margin:0 auto 24px;">This game is protected and authorized for playback exclusively on <b>Athyx Network</b>.</p><a href="https://athyx-network.web.app/" target="_blank" style="display:inline-block;background:#3b82f6;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;box-shadow:0 4px 14px rgba(59,130,246,0.4);">Play on Athyx Network</a></div></div>';
+                throw new Error("Athyx Sitelock: Unauthorized domain");
+            }
+        })();
+        // WebGL CORS image guard
+        (function() {
+            var srcDesc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+            if (srcDesc && srcDesc.set) {
+                Object.defineProperty(HTMLImageElement.prototype, 'src', {
+                    configurable: true,
+                    enumerable: srcDesc.enumerable,
+                    get: srcDesc.get,
+                    set: function(val) {
+                        if (typeof val === 'string' && !val.startsWith('data:') && !val.startsWith('blob:')) {
+                            try { this.crossOrigin = 'anonymous'; } catch(e) {}
+                        }
+                        return srcDesc.set.call(this, val);
+                    }
+                });
+            }
+        })();
+        // Athyx ad/SDK shims
+        var aCo = "US";
+        var scrollerMessage = "   ";
+        var userData = "";
+        function gtag() {}
+        function SendEvent() {}
+        function updateStatus() {}
+        function ShowAd1() {} function ShowAd2() {} function ShowAd3() {}
+        function ShowAd4() {} function ShowAd5() {} function ShowAd6() {}
+        function ShowAd7() {} function ShowAd8() {} function ShowAd9() {}
+        function ShowAdBreak() { if (typeof Main !== "undefined" && Main.DoneInterstitialAd) Main.DoneInterstitialAd(true); }
+        function LoadVideo() {}
+        function ShowVideo() { if (typeof Main !== "undefined" && Main.DoneVideoAd) Main.DoneVideoAd(true); }
+        function GamePlayStart() {}
+        function GamePlayStop() {}
+        function HappyTime() {}
+        function EmailSignup() {}
+        function loadGameData() { return userData; }
+        function saveGameData(d) { userData = d || ""; }
+        function isUserLoggedIn() { return false; }
+        function signOut() {}
+        window.addEventListener("touchmove", function(event) { event.preventDefault(); }, { capture: false, passive: false });
+        window.addEventListener("keydown", function(e) {
+            if ([32, 38, 40, 9].indexOf(e.keyCode) > -1 && e.target == document.body) e.preventDefault();
+        });
+    </script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+        }
+        #openfl-content {
+            background: #000000;
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+    </style>
+    <script type="text/javascript" src="./FootballBros.js?th=272"></script>
+</head>
+<body>
+    <div id="openfl-content"></div>
+    <script type="text/javascript">
+        lime.embed("FootballBros", "openfl-content", 0, 0, { parameters: {} });
+        var el = document.getElementById("openfl-content");
+        if (el) {
+            el.addEventListener("blur", function() { window.focus(); });
+        }
+    </script>
+</body>
+</html>
+

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <base href="https://cdn.jsdelivr.net/gh/3kh0/3kh0-lite@main/projects/motox3m-spooky/">
+    <base href="https://318573026-162284027483016384.preview.editmysite.com/uploads/b/139890129-642750312748978757/files/">
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
@@ -70,23 +70,62 @@
     </script>
 
     <script>
-        // --- Athyx Ad-Free Shim & Mock SDK ---
+        // --- Athyx WebGL CORS Fix & Ad-Free Shim / Mock SDK ---
+        (function() {
+            var srcDesc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+            if (srcDesc && srcDesc.set) {
+                Object.defineProperty(HTMLImageElement.prototype, 'src', {
+                    configurable: true,
+                    enumerable: srcDesc.enumerable,
+                    get: srcDesc.get,
+                    set: function(val) {
+                        if (typeof val === 'string' && !val.startsWith('data:') && !val.startsWith('blob:')) {
+                            try { this.crossOrigin = 'anonymous'; } catch(e) {}
+                        }
+                        return srcDesc.set.call(this, val);
+                    }
+                });
+            }
+            var OrigImage = window.Image;
+            window.Image = function(w, h) {
+                var img = new OrigImage(w, h);
+                try { img.crossOrigin = 'anonymous'; } catch(e) {}
+                return img;
+            };
+            window.Image.prototype = OrigImage.prototype;
+        })();
         window.PokiSDK = {
             init: function() { return Promise.resolve(); },
             gameLoadingStart: function() {},
+            gameLoadingProgress: function() {},
             gameLoadingFinished: function() {},
+            gameInteractive: function() {},
             gameplayStart: function() {},
             gameplayStop: function() {},
+            roundStart: function() {},
+            roundEnd: function() {},
+            customEvent: function() {},
+            setDebug: function() {},
+            measure: function() {},
+            muteAd: function() {},
             commercialBreak: function() { return Promise.resolve(); },
             rewardedBreak: function() { return Promise.resolve(true); },
             displayAd: function() {},
             destroyAd: function() {},
+            isAdBlocked: function() { return false; },
             getLeaderboard: function() { return Promise.resolve([]); },
             happyTime: function() {}
         };
         window.gamebridge = {
+            ready: true,
             requestAd: function(cb) { if (typeof cb === 'function') cb(); },
             showStart: function() {},
+            showPreroll: function() { return Promise.resolve(); },
+            showPause: function() {},
+            showAd: function() { return Promise.resolve(); },
+            showNext: function() { return Promise.resolve(); },
+            showBrowse: function() {},
+            showReward: function() { return Promise.resolve(true); },
             showEnd: function() {}
         };
         window.google = window.google || {
@@ -105,11 +144,17 @@
     <div id="orientation"></div>
     <div id="loader">Loading ...</div>
 
-    <script type="text/javascript" src="assets/lib/nape.min.js">var nape = "nape.min.js";</script>
+    <script type="text/javascript" src="assets/lib/nape.min.js">var nape = "assets/lib/nape.min.js";</script>
+    <script type="text/javascript" src="assets/lib/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="assets/lib/easeljs-0.8.2.combined.js"></script>
+    <script type="text/javascript" src="assets/lib/bluebird.min.js"></script>
     <script type="text/javascript" src="assets/lib/phaser.min.js"></script>
     <script type="text/javascript" src="assets/lib/phaser-cachebuster.min.js"></script>
     <script type="text/javascript" src="assets/lib/phaser-super-storage.min.js"></script>
     <script type="text/javascript" src="assets/lib/dragonBones.min.js"></script>
-    <script type="text/javascript" src="motox3m.min.js"></script>
+    <script type="text/javascript">
+        window.sdk = { showBanner: function() {} };
+    </script>
+    <script type="text/javascript" src="motox3m6.min.js"></script>
 </body>
 </html>

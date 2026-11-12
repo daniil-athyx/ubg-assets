@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Poppy Playtime Chapter 1</title>
+    <script>
+        // --- Athyx Sitelock Security Guard ---
+        (function() {
+            var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+            var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+            function _isAuthorized() {
+                try {
+                    var host = (window.location.hostname || "").toLowerCase();
+                    if (host && _domains.some(function(d) { return d && (host === d || host.endsWith("." + d)); })) return true;
+                    if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+                        for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+                            var ao = window.location.ancestorOrigins[i].toLowerCase();
+                            if (_domains.some(function(d) { return d && ao.indexOf(d) !== -1; })) return true;
+                        }
+                    }
+                    if (document.referrer) {
+                        var ref = document.referrer.toLowerCase();
+                        if (_domains.some(function(d) { return d && ref.indexOf(d) !== -1; })) return true;
+                    }
+                    try {
+                        if (window.parent && window.parent !== window) {
+                            var phost = window.parent.location.hostname.toLowerCase();
+                            if (_domains.some(function(d) { return d && (phost === d || phost.endsWith("." + d)); })) return true;
+                        }
+                    } catch(e) {}
+                } catch(e) {}
+                return false;
+            }
+            if (!_isAuthorized()) {
+                window.stop && window.stop();
+                document.documentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0e15;color:#fff;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="color:#f43f5e;font-size:32px;margin-bottom:12px;">Access Restricted</h1><p style="color:#94a3b8;font-size:16px;max-width:500px;line-height:1.6;margin:0 auto 24px;">This game is protected and authorized for playback exclusively on <b>Athyx Network</b>.</p><a href="https://athyx-network.web.app/" target="_blank" style="display:inline-block;background:#3b82f6;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;box-shadow:0 4px 14px rgba(59,130,246,0.4);">Play on Athyx Network</a></div></div>';
+                throw new Error("Athyx Sitelock: Unauthorized domain");
+            }
+        })();
+    </script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background: #000;
+        }
+        iframe {
+            width: 100vw;
+            height: 100vh;
+            border: 0;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <iframe src="https://turbowarp.org/620080150/embed?fullscreen-background=black&clones=Infinity&offscreen" allowtransparency="true" allow="fullscreen; autoplay" allowfullscreen></iframe>
+</body>
+</html>
+

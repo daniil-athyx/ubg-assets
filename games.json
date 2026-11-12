@@ -10,6 +10,11 @@
     "icon": "icons/60_seconds.png"
   },
   {
+    "name": "8 Ball Pool",
+    "path": "8 Ball Pool.html",
+    "icon": "icons/8_ball_pool.png"
+  },
+  {
     "name": "A Small World Cup",
     "path": "A Small World Cup.html",
     "icon": "icons/a_small_world_cup.png"
@@ -120,6 +125,11 @@
     "icon": "icons/caseohs_basics.png"
   },
   {
+    "name": "Chess",
+    "path": "Chess.html",
+    "icon": "icons/chess.png"
+  },
+  {
     "name": "Chrome Dino",
     "path": "Google Dino.html",
     "icon": "icons/google_dino.png"
@@ -153,6 +163,11 @@
     "name": "Cut the Rope",
     "path": "Cut the Rope.html",
     "icon": "icons/cut_the_rope.png"
+  },
+  {
+    "name": "Deepest Sword",
+    "path": "Deepest Sword.html",
+    "icon": "icons/deepest_sword.jpg"
   },
   {
     "name": "Deltarune",
@@ -220,6 +235,11 @@
     "icon": "icons/escape_road_2.png"
   },
   {
+    "name": "FIFA 11",
+    "path": "FIFA 11.html",
+    "icon": "icons/fifa_11.png"
+  },
+  {
     "path": "Fireboy and Watergirl 1.html",
     "name": "Fireboy and Watergirl 1: Forest Temple",
     "icon": "icons/fireboy_watergirl_1.jpg"
@@ -275,6 +295,11 @@
     "icon": "icons/fnaf_world.png"
   },
   {
+    "name": "Football Bros",
+    "path": "Football Bros.html",
+    "icon": "icons/football_bros.png"
+  },
+  {
     "name": "Geometry Dash",
     "path": "Geometry Dash.html",
     "icon": "icons/geometry_dash.svg"
@@ -293,6 +318,11 @@
     "name": "GTA: Vice City",
     "path": "GTA Vice City.html",
     "icon": "icons/gta_vice_city.png"
+  },
+  {
+    "name": "Gunspin",
+    "path": "Gunspin.html",
+    "icon": "icons/gunspin.png"
   },
   {
     "name": "Happy Wheels",
@@ -358,6 +388,11 @@
     "name": "Just Fall.LOL",
     "path": "Just Fall.lol.html",
     "icon": "icons/just_fall.png"
+  },
+  {
+    "name": "Kingdom Hearts: Chain of Memories",
+    "path": "Kingdom Hearts Chain of Memories.html",
+    "icon": "icons/kingdom_hearts_chain_of_memories.jpg"
   },
   {
     "name": "Learn to Fly",
@@ -548,6 +583,11 @@
     "name": "Polytrack",
     "path": "Polytrack.html",
     "icon": "icons/polytrack.png"
+  },
+  {
+    "name": "Poppy Playtime Chapter 1",
+    "path": "Poppy Playtime Chapter 1.html",
+    "icon": "icons/poppy_playtime_chapter_1.png"
   },
   {
     "path": "REPO.html",
