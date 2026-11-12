@@ -264,9 +264,22 @@ const loadingText = document.querySelector("#loading-text");
 let loadedBytes = 0;
 const DB_NAME = "gameFilesDB_v2";
 const STORE_NAME = "files";
+let dbPromise = null;
+let cacheWriteDisabled = false;
+
+function withTimeout(promise, ms, label) {
+    let timer;
+    return Promise.race([
+        promise,
+        new Promise((_, reject) => {
+            timer = setTimeout(() => reject(new Error(label + " timed out")), ms);
+        })
+    ]).finally(() => clearTimeout(timer));
+}
 
 function openDB() {
-    return new Promise((resolve, reject) => {
+    if (dbPromise) return dbPromise;
+    dbPromise = withTimeout(new Promise((resolve, reject) => {
         const request = indexedDB.open(DB_NAME, 1);
         request.onupgradeneeded = e => {
             const db = e.target.result;
@@ -274,31 +287,42 @@ function openDB() {
                 db.createObjectStore(STORE_NAME);
             }
         };
-        request.onsuccess = e => resolve(e.target.result);
-        request.onerror = e => reject(e.target.error);
-    });
+        request.onsuccess = e => {
+            const db = e.target.result;
+            db.onversionchange = () => { db.close(); dbPromise = null; };
+            db.onclose = () => { dbPromise = null; };
+            resolve(db);
+        };
+        request.onerror = e => { dbPromise = null; reject(e.target.error || new Error("IDB open error")); };
+        request.onblocked = () => { dbPromise = null; reject(new Error("IDB open blocked")); };
+    }), 3000, "openDB");
+    return dbPromise;
 }
 
 async function saveFile(name, buffer) {
+    if (cacheWriteDisabled) return;
     const db = await openDB();
-    return new Promise((resolve, reject) => {
+    return withTimeout(new Promise((resolve, reject) => {
         const tx = db.transaction(STORE_NAME, "readwrite");
         const store = tx.objectStore(STORE_NAME);
-        store.put(buffer, name);
+        const req = store.put(buffer, name);
+        req.onerror = e => reject(e.target.error || new Error("IDB put error"));
         tx.oncomplete = () => resolve();
-        tx.onerror = e => reject(e.target.error);
-    });
+        tx.onerror = e => reject(e.target.error || new Error("IDB tx error"));
+        tx.onabort = e => reject(tx.error || e.target.error || new Error("IDB tx aborted"));
+    }), 3000, "saveFile");
 }
 
 async function getFile(name) {
     const db = await openDB();
-    return new Promise((resolve, reject) => {
+    return withTimeout(new Promise((resolve, reject) => {
         const tx = db.transaction(STORE_NAME, "readonly");
         const store = tx.objectStore(STORE_NAME);
         const request = store.get(name);
         request.onsuccess = e => resolve(e.target.result);
-        request.onerror = e => reject(e.target.error);
-    });
+        request.onerror = e => reject(e.target.error || new Error("IDB get error"));
+        tx.onabort = e => reject(tx.error || new Error("IDB get aborted"));
+    }), 2000, "getFile");
 }
 
 async function fetchWithCache(name, url) {
@@ -314,17 +338,25 @@ async function fetchWithCache(name, url) {
     let lastErr;
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         let received = 0;
+        const controller = new AbortController();
+        let stallTimer = setTimeout(() => controller.abort(), 20000);
+        const resetStall = () => {
+            clearTimeout(stallTimer);
+            stallTimer = setTimeout(() => controller.abort(), 20000);
+        };
         try {
-            const response = await fetch(url);
+            const response = await fetch(url, { signal: controller.signal });
             if (!response.ok || !response.body) {
                 throw new Error(`HTTP ${response.status} while fetching ${name}`);
             }
+            resetStall();
             const reader = response.body.getReader();
             const chunks = [];
 
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
+                resetStall();
                 received += value.length;
                 loadedBytes += value.length;
                 chunks.push(value);
@@ -333,6 +365,7 @@ async function fetchWithCache(name, url) {
                 let mbTotal = '633.45';
                 loadingText.textContent = `LOADING... ${mbDone} MB / ${mbTotal} MB`;
             }
+            clearTimeout(stallTimer);
 
             const fullBuffer = new Uint8Array(received);
             let offset = 0;
@@ -341,9 +374,16 @@ async function fetchWithCache(name, url) {
                 offset += chunk.length;
             }
 
-            try { await saveFile(name, fullBuffer.buffer); } catch (e) {}
+            if (!cacheWriteDisabled) {
+                try {
+                    await saveFile(name, fullBuffer.buffer);
+                } catch (e) {
+                    cacheWriteDisabled = true;
+                }
+            }
             return fullBuffer.buffer;
         } catch (err) {
+            clearTimeout(stallTimer);
             loadedBytes = Math.max(0, loadedBytes - received);
             lastErr = err;
             if (attempt < maxAttempts) {
