@@ -305,6 +305,11 @@
     "icon": "icons/geometry_dash.svg"
   },
   {
+    "name": "Grand Theft Auto III",
+    "path": "GTA 3.html",
+    "icon": "icons/gta_3.png"
+  },
+  {
     "name": "Granny",
     "path": "Granny.html",
     "icon": "icons/granny.png"
