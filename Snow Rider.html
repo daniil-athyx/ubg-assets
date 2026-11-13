@@ -1,21 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Snow Rider 3D</title>
+<base href="https://cdn.jsdelivr.net/gh/Vrkids2009/snowrider3d@6b7c2b9167b592528b221428414e63f06c4640b9/">
 
-
-<!-- Ultimate Game Stash file--> 
-<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
-
-
-
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/gh/Vrkids2009/snowrider3d@6b7c2b9167b592528b221428414e63f06c4640b9/TemplateData/style.css">
-<script
-	src="https://cdn.jsdelivr.net/gh/Vrkids2009/snowrider3d@6b7c2b9167b592528b221428414e63f06c4640b9/TemplateData/UnityProgress.js">
-</script>
-<script
-	src="https://cdn.jsdelivr.net/gh/Vrkids2009/snowrider3d@6b7c2b9167b592528b221428414e63f06c4640b9/Build/UnityLoader.js">
-</script>
 <script>
-	var gameInstance = UnityLoader.instantiate("gameContainer", "https://cdn.jsdelivr.net/gh/Vrkids2009/snowrider3d@6b7c2b9167b592528b221428414e63f06c4640b9/Build/SnowRider3D-gd-1.json", {onProgress: UnityProgress,Module:{onRuntimeInitialized: function() {UnityProgress(gameInstance, "complete")}}}); 
+    // --- Athyx Sitelock Security Guard ---
+    (function() {
+        var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+        var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+
+        function _isAuthorized() {
+            var current = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : "";
+            if (_domains.indexOf(current) !== -1) return true;
+
+            if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+                for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+                    try {
+                        var aHost = new URL(window.location.ancestorOrigins[i]).hostname.toLowerCase();
+                        if (_domains.indexOf(aHost) !== -1) return true;
+                    } catch(e) {}
+                }
+                return false;
+            }
+
+            if (document.referrer) {
+                try {
+                    var refHost = new URL(document.referrer).hostname.toLowerCase();
+                    if (_domains.indexOf(refHost) !== -1) return true;
+                } catch(e) {}
+            }
+
+            try {
+                if (window.parent && window.parent.location && window.parent.location.hostname) {
+                    if (_domains.indexOf(window.parent.location.hostname.toLowerCase()) !== -1) return true;
+                }
+            } catch(e) {}
+
+            if (current === "" || window.location.protocol === "about:" || window.location.protocol === "blob:" || window.location.protocol === "data:") {
+                return true;
+            }
+
+            return false;
+        }
+
+        if (!_isAuthorized()) {
+            window.stop && window.stop();
+            document.documentElement.innerHTML = '<div style="background:#09090b;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;text-align:center;padding:20px;">' +
+                '<h1 style="color:#ef4444;font-size:32px;margin-bottom:12px;">Access Restricted</h1>' +
+                '<p style="color:#a1a1aa;max-width:480px;line-height:1.5;">This game is locked to Athyx Network. Please play on the official portal at <a href="https://athyx-network.web.app" style="color:#38bdf8;text-decoration:none;">athyx-network.web.app</a>.</p>' +
+                '</div>';
+            throw new Error("Athyx Sitelock: Unauthorized domain");
+        }
+    })();
 </script>
-<div class="webgl-content">
-	<div id="gameContainer" style="width: 100%; height: 100%; margin: auto"></div>
-</div>
+
+<link rel="stylesheet" href="TemplateData/style.css">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+  }
+  #gameContainer {
+    width: 100vw !important;
+    height: 100vh !important;
+    position: absolute;
+    inset: 0;
+  }
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+  }
+</style>
+<script src="TemplateData/UnityProgress.js"></script>
+<script src="Build/UnityLoader.js"></script>
+<script>
+  window.addEventListener('load', function() {
+    var gameInstance = UnityLoader.instantiate("gameContainer", "Build/SnowRider3D-gd-1.json", {
+      onProgress: UnityProgress,
+      Module: {
+        onRuntimeInitialized: function() {
+          if (typeof UnityProgress === 'function') UnityProgress(gameInstance, "complete");
+        }
+      }
+    });
+  });
+</script>
+</head>
+<body>
+  <div id="gameContainer"></div>
+</body>
+</html>
