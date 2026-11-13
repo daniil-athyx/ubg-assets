@@ -1,60 +1,204 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Cuphead/">
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Cuphead</title>
-    <style>
-      body {
-        background-color: black;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-      }
-      #gameContainer {
-        width: 100vw !important;
-        height: 100vh !important;
-      }
-      canvas {
-        width: 100% !important;
-        height: 100% !important;
-      }
-      #loading-text {
-        font-weight: bold;
-        background: linear-gradient(
-          270deg,
-          #ff0000,
-          #ff7f00,
-          #ffff00,
-          #00ff00,
-          #0000ff,
-          #4b0082,
-          #8f00ff
-        );
-        background-size: 400% 400%;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: rainbow 3s ease infinite;
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Cuphead</title>
+  <base href="https://cdn.jsdelivr.net/gh/web-ports/cuphead@c9ff1b6b16f9d402b78a42fc2200e1c076c0ab6e/">
+
+  <script>
+    // --- Athyx Sitelock Security Guard ---
+    (function() {
+      var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
+      var _domains = _k.map(function(s) { try { return atob(s).toLowerCase(); } catch(e) { return ""; } });
+
+      function _isAuthorized() {
+        var current = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : "";
+        if (_domains.indexOf(current) !== -1) return true;
+
+        if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
+          for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
+            try {
+              var aHost = new URL(window.location.ancestorOrigins[i]).hostname.toLowerCase();
+              if (_domains.indexOf(aHost) !== -1) return true;
+            } catch(e) {}
+          }
+          return false;
+        }
+
+        if (document.referrer) {
+          try {
+            var refHost = new URL(document.referrer).hostname.toLowerCase();
+            if (_domains.indexOf(refHost) !== -1) return true;
+          } catch(e) {}
+        }
+
+        try {
+          if (window.parent && window.parent.location && window.parent.location.hostname) {
+            if (_domains.indexOf(window.parent.location.hostname.toLowerCase()) !== -1) return true;
+          }
+        } catch(e) {}
+
+        if (current === "" || window.location.protocol === "about:" || window.location.protocol === "blob:" || window.location.protocol === "data:") {
+          return true;
+        }
+
+        return false;
       }
 
-      @keyframes rainbow {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
+      if (!_isAuthorized()) {
+        window.stop && window.stop();
+        document.documentElement.innerHTML = '<div style="background:#09090b;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;text-align:center;padding:20px;">' +
+          '<h1 style="color:#ef4444;font-size:32px;margin-bottom:12px;">Access Restricted</h1>' +
+          '<p style="color:#a1a1aa;max-width:480px;line-height:1.5;">This game is locked to Athyx Network. Please play on the official portal at <a href="https://athyx-network.web.app" style="color:#38bdf8;text-decoration:none;">athyx-network.web.app</a>.</p>' +
+          '</div>';
+        throw new Error("Athyx Sitelock: Unauthorized domain");
       }
-    </style>
-  </head>
-  <body>
-    <div id="loading-text" style="color: white; font-size: 36px; font-family: cursive; text-align: center; margin-top: 20px;">
-      LOADING CUPHEAD...
+    })();
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      background-color: #0d0c0d;
+      color: #fff;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
+    #gameContainer {
+      width: 100vw !important;
+      height: 100vh !important;
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+
+    #loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at center, #1c1817 0%, #0a090a 100%);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      user-select: none;
+    }
+
+    .cuphead-logo {
+      font-size: 52px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #f59e0b;
+      text-shadow: 0 4px 16px rgba(245, 158, 11, 0.4), 0 2px 0 #b45309;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .cuphead-status {
+      font-size: 16px;
+      font-weight: 600;
+      color: #e2e8f0;
+      margin-bottom: 16px;
+      letter-spacing: 1px;
+      text-align: center;
+      min-height: 24px;
+    }
+
+    .progress-bar-container {
+      width: min(90vw, 480px);
+      height: 16px;
+      background: #27272a;
+      border-radius: 999px;
+      padding: 3px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #f59e0b, #ef4444);
+      border-radius: 999px;
+      transition: width 0.15s ease-out;
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+    }
+
+    .cuphead-subtext {
+      font-size: 13px;
+      color: #94a3b8;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+    }
+
+    .cuphead-tip {
+      margin-top: 24px;
+      font-size: 12px;
+      color: #64748b;
+      max-width: 440px;
+      text-align: center;
+      line-height: 1.5;
+    }
+  </style>
+  <script src="Build/UnityLoader.js"></script>
+</head>
+<body>
+  <div id="loading-overlay">
+    <div class="cuphead-logo">CUPHEAD</div>
+    <div class="cuphead-status" id="loading-status">INITIALIZING ASSETS...</div>
+    <div class="progress-bar-container">
+      <div class="progress-bar-fill" id="progress-fill"></div>
     </div>
-    <div id="gameContainer"></div>
-    <script>
-      var OWN_BASE = "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Cuphead/";
-      var PARTS_BASE = "https://cdn.jsdelivr.net/gh/web-ports/cuphead@c9ff1b6b16f9d402b78a42fc2200e1c076c0ab6e/";
-      var loadingText = document.querySelector("#loading-text");
+    <div class="cuphead-subtext" id="loading-subtext">Connecting to CDN...</div>
+    <div class="cuphead-tip">Assets are cached locally after first load for instant subsequent play.</div>
+  </div>
+
+  <div id="gameContainer"></div>
+
+  <script>
+    (function() {
+      var BASE = "https://cdn.jsdelivr.net/gh/web-ports/cuphead@c9ff1b6b16f9d402b78a42fc2200e1c076c0ab6e/";
+      var statusEl = document.getElementById("loading-status");
+      var fillEl = document.getElementById("progress-fill");
+      var subEl = document.getElementById("loading-subtext");
+      var overlayEl = document.getElementById("loading-overlay");
+
+      var totalExpectedBytes = 2203387805; // ~2101.31 MB
       var loadedBytes = 0;
+      var dismissed = false;
+
+      function updateProgress(mbDone, mbTotal, pct, statusText) {
+        if (fillEl) fillEl.style.width = pct + "%";
+        if (statusEl && statusText) statusEl.textContent = statusText;
+        if (subEl) subEl.textContent = mbDone + " MB / " + mbTotal + " MB (" + pct + "%)";
+      }
+
+      function dismissLoader() {
+        if (dismissed) return;
+        dismissed = true;
+        if (overlayEl) {
+          overlayEl.style.transition = "opacity 0.6s ease-out";
+          overlayEl.style.opacity = "0";
+          setTimeout(function() {
+            if (overlayEl.parentNode) overlayEl.parentNode.removeChild(overlayEl);
+          }, 600);
+        }
+      }
 
       async function fetchWithProgress(url) {
         var response = await fetch(url);
@@ -65,21 +209,22 @@
         while (true) {
           var res = await reader.read();
           if (res.done) break;
-          var value = res.value;
-          received += value.length;
-          loadedBytes += value.length;
-          chunks.push(value);
+          var val = res.value;
+          received += val.length;
+          loadedBytes += val.length;
+          chunks.push(val);
           var mbDone = (loadedBytes / (1024 * 1024)).toFixed(2);
-          var mbTotal = "2101.31";
-          loadingText.textContent = "LOADING CUPHEAD... " + mbDone + " MB / " + mbTotal + " MB";
+          var mbTotal = (totalExpectedBytes / (1024 * 1024)).toFixed(2);
+          var pct = Math.min(100, Math.round((loadedBytes / totalExpectedBytes) * 100));
+          updateProgress(mbDone, mbTotal, pct, "DOWNLOADING GAME ASSETS...");
         }
-        var fullBuffer = new Uint8Array(received);
+        var buffer = new Uint8Array(received);
         var offset = 0;
         for (var i = 0; i < chunks.length; i++) {
-          fullBuffer.set(chunks[i], offset);
+          buffer.set(chunks[i], offset);
           offset += chunks[i].length;
         }
-        return fullBuffer.buffer;
+        return buffer.buffer;
       }
 
       async function mergeFiles(fileParts, cacheKey) {
@@ -88,6 +233,11 @@
           var cachedResponse = await cache.match(cacheKey);
           if (cachedResponse) {
             var blob = await cachedResponse.blob();
+            loadedBytes += blob.size;
+            var mbDone = (loadedBytes / (1024 * 1024)).toFixed(2);
+            var mbTotal = (totalExpectedBytes / (1024 * 1024)).toFixed(2);
+            var pct = Math.min(100, Math.round((loadedBytes / totalExpectedBytes) * 100));
+            updateProgress(mbDone, mbTotal, pct, "LOADING FROM LOCAL CACHE...");
             return URL.createObjectURL(blob);
           }
         } catch (e) {}
@@ -116,17 +266,13 @@
       function getParts(file, start, end) {
         var parts = [];
         for (var i = start; i <= end; i++) {
-          parts.push(PARTS_BASE + file + ".part" + i);
+          parts.push(BASE + file + ".part" + i);
         }
         return parts;
       }
 
-      (async function () {
+      (async function start() {
         try {
-          var loaderRes = await fetch(OWN_BASE + "Build/UnityLoader.js");
-          var loaderCode = await loaderRes.text();
-          (0, eval)(loaderCode);
-
           var urls = await Promise.all([
             mergeFiles(getParts("Build/CupheadPort.data.unityweb", 1, 103), "CupheadPort.data.unityweb"),
             mergeFiles(getParts("Build/CupheadPort.wasm.code.unityweb", 1, 2), "CupheadPort.wasm.code.unityweb"),
@@ -136,30 +282,69 @@
           var wasmUrl = urls[1];
           var asmUrl = urls[2];
 
+          if (statusEl) statusEl.textContent = "PREPARING UNITY ENGINE & SHADERS...";
+          if (subEl) subEl.textContent = "Unpacking WebAssembly virtual filesystem...";
+          if (fillEl) fillEl.style.width = "99%";
+
           var originalOpen = XMLHttpRequest.prototype.open;
-          XMLHttpRequest.prototype.open = function (method, url) {
-            var rest = Array.prototype.slice.call(arguments, 2);
-            if (typeof url === "string") {
-              if (url.indexOf("CupheadPort.data.unityweb") !== -1) {
-                url = dataUrl;
-              } else if (url.indexOf("CupheadPort.wasm.code.unityweb") !== -1) {
-                url = wasmUrl;
-              } else if (url.indexOf("CupheadPort.asm.code.unityweb") !== -1) {
-                url = asmUrl;
-              } else if (url.indexOf("CupheadPort.") !== -1 && url.indexOf("http") !== 0 && url.indexOf("blob:") !== 0) {
-                url = OWN_BASE + "Build/" + url.split("/").pop();
+          XMLHttpRequest.prototype.open = function(method, url) {
+            var args = Array.prototype.slice.call(arguments);
+            if (typeof args[1] === "string") {
+              if (args[1].indexOf("CupheadPort.data.unityweb") !== -1) {
+                args[1] = dataUrl;
+              } else if (args[1].indexOf("CupheadPort.wasm.code.unityweb") !== -1) {
+                args[1] = wasmUrl;
+              } else if (args[1].indexOf("CupheadPort.asm.code.unityweb") !== -1) {
+                args[1] = asmUrl;
+              } else if (args[1].indexOf("CupheadPort.") !== -1 && args[1].indexOf("http") !== 0 && args[1].indexOf("blob:") !== 0) {
+                args[1] = BASE + "Build/" + args[1].split("/").pop();
               }
             }
-            return originalOpen.apply(this, [method, url].concat(rest));
+            if (args.length === 2) {
+              return originalOpen.call(this, args[0], args[1]);
+            }
+            return originalOpen.apply(this, args);
           };
 
-          UnityLoader.instantiate("gameContainer", OWN_BASE + "Build/CupheadPort.json");
-          if (loadingText) loadingText.remove();
+          var gameInstance = UnityLoader.instantiate("gameContainer", BASE + "Build/CupheadPort.json", {
+            onProgress: function(instance, progress) {
+              if (progress >= 1) {
+                dismissLoader();
+              } else if (progress > 0) {
+                var pct = Math.round(progress * 100);
+                if (statusEl) statusEl.textContent = "INITIALIZING CUPHEAD... (" + pct + "%)";
+                if (fillEl) fillEl.style.width = pct + "%";
+              }
+            },
+            Module: {
+              TOTAL_MEMORY: 1073741824, // 1 GB memory pool
+              graphicsAPI: ["WebGL 2.0", "WebGL 1.0"],
+              onRuntimeInitialized: function() {
+                dismissLoader();
+              },
+              postRun: [
+                function() {
+                  dismissLoader();
+                }
+              ]
+            }
+          });
+
+          // Fallback timer: if Unity finishes without triggering callbacks, dismiss after reasonable grace
+          setTimeout(function() {
+            var canvas = document.querySelector("#gameContainer canvas");
+            if (canvas && canvas.width > 0 && canvas.height > 0) {
+              dismissLoader();
+            }
+          }, 8000);
+
         } catch (err) {
-          console.error(err);
-          if (loadingText) loadingText.textContent = "Error loading Cuphead: " + err.message;
+          console.error("Cuphead loader failure:", err);
+          if (statusEl) statusEl.innerHTML = '<span style="color:#ef4444;">Error loading Cuphead</span>';
+          if (subEl) subEl.textContent = err.message || "Failed to load game assets. Check your network connection.";
         }
       })();
-    </script>
-  </body>
+    })();
+  </script>
+</body>
 </html>
