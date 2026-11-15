@@ -40,6 +40,7 @@
 
         function addScript(src, buster, callback) {
             var s = document.createElement('script');
+            s.charset = 'utf-8';
             var fullSrc = src.indexOf("http") === 0 ? src : (BASE_URL + src);
             s.setAttribute('src', fullSrc + '?v=' + buster);
             if (typeof callback === 'function') {
