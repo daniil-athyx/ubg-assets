@@ -94,7 +94,7 @@
     <!-- Allow the C++ to access the canvas element -->
     <script type='text/javascript'>
 		var loadScript = (ev, src) => {
-			ev.preventDefault();
+			if (ev) ev.preventDefault();
 
 			// Hide select-version, show loader
 			document.getElementById('select-version').style.display = 'none';
@@ -106,8 +106,7 @@
 			document.head.appendChild(s);
 		};
 
-		document.getElementById('select-version').style.display = 'block';
-		document.getElementById('load').addEventListener('click', (ev) => loadScript(ev, 'index.js'));
+		loadScript(null, 'index.js');
 
 		var statusElement = document.getElementById('status');
 		var progressElement = document.getElementById('progress');
