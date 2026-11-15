@@ -62,6 +62,14 @@
       debug: true
     };
   </script>
+  <script>
+    (function() {
+      var origPost = Worker.prototype.postMessage;
+      Worker.prototype.postMessage = function(msg) {
+        return origPost.call(this, msg);
+      };
+    })();
+  </script>
   <script src="fileMerger.js"></script>
     <script src="Build/UnityLoader.js"></script>
     <script>
