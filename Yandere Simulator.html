@@ -95,6 +95,7 @@
                 (0, eval)(await lRes.text());
 
                 var dataUrl = await mergeFiles(getParts("Build/YandereSim.data.unityweb", 1, 6));
+                window.dataUrll = dataUrl;
 
                 var originalOpen = XMLHttpRequest.prototype.open;
                 XMLHttpRequest.prototype.open = function(method, url) {
