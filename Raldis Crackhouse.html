@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <base href="https://cdn.jsdelivr.net/gh/web-ports/raldi@main/">
+    <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/ubg-assets@main/raldi/">
     <meta charset="utf-8" />
     <title>BALDI</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico" />
@@ -60,6 +60,7 @@
       }
       async function fetchWithProgress(url) {
         const response = await fetch(url);
+        if (!response.ok) throw new Error("Failed to load " + url + ": " + response.status);
         const reader = response.body.getReader();
         let chunks = [];
         let received = 0;
