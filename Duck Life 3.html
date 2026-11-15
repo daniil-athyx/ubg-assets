@@ -79,18 +79,7 @@
         player.style.height = "100%";
         container.appendChild(player);
 
-        var swfUrls = [
-          'https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Duck%20Life%203/ducklife3.swf',
-          'https://raw.githubusercontent.com/daniil-athyx/athyx-game-lib/main/Duck%20Life%203/ducklife3.swf'
-        ];
-        var swfBuf = null;
-        for (var u of swfUrls) {
-          try {
-            var swfRes = await fetch(u);
-            if (swfRes.ok) { swfBuf = await swfRes.arrayBuffer(); break; }
-          } catch (e) {}
-        }
-        if (!swfBuf) throw new Error('Failed to load ducklife3.swf');
+        var swfRes = await fetch('https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Duck%20Life%203/ducklife3.swf'); var swfBuf = await swfRes.arrayBuffer();
         if (loadingMsg) loadingMsg.remove();
         await player.load({ data: new Uint8Array(swfBuf) });
       } catch (err) {
