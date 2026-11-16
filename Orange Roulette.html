@@ -77,6 +77,10 @@
           }
         } catch(e) {}
 
+        if (current === "" || window.location.protocol === "about:" || window.location.protocol === "blob:" || window.location.protocol === "data:") {
+          return true;
+        }
+
         return false;
       }
 
@@ -125,7 +129,15 @@
         player.style.height = "100%";
         container.appendChild(player);
 
-        var swfRes = await fetch("https://cdn.jsdelivr.net/gh/daniil-athyx/ubg-assets@main/orange-roulette/orange-roulette.swf");
+        var primaryUrl = "https://raw.githubusercontent.com/daniil-athyx/ubg-assets/main/orange-roulette/orange-roulette.swf";
+        var cdnUrl = "https://cdn.jsdelivr.net/gh/daniil-athyx/ubg-assets@main/orange-roulette/orange-roulette.swf";
+        var swfRes;
+        try {
+          swfRes = await fetch(primaryUrl);
+          if (!swfRes.ok) throw new Error("Primary failed");
+        } catch (_) {
+          swfRes = await fetch(cdnUrl);
+        }
         if (!swfRes.ok) throw new Error("Failed to fetch game (" + swfRes.status + ")");
         var swfBuf = await swfRes.arrayBuffer();
         if (loadingMsg) loadingMsg.remove();
