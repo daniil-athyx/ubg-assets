@@ -310,11 +310,6 @@
     "icon": "icons/geometry_dash.svg"
   },
   {
-    "name": "Grand Theft Auto III",
-    "path": "GTA 3.html",
-    "icon": "icons/gta_3_v2.png"
-  },
-  {
     "name": "Granny",
     "path": "Granny.html",
     "icon": "icons/granny.png"
@@ -323,6 +318,11 @@
     "path": "Granny 2.html",
     "name": "Granny 2",
     "icon": "icons/granny_2.jpg"
+  },
+  {
+    "name": "GTA: 3",
+    "path": "GTA 3.html",
+    "icon": "icons/gta_3_v2.png"
   },
   {
     "name": "GTA: Vice City",
