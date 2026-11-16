@@ -57,33 +57,34 @@
         // --- GTA 3 Asset Redirect Guard ---
         (function() {
             var _origFetch = window.fetch;
-            window.fetch = async function(resource, init) {
+            var RAW_ROOT = "https://raw.githubusercontent.com/woahhcrackers/GTA3Web/main/";
+            window.fetch = function(resource, init) {
                 var url = (resource instanceof Request) ? resource.url : String(resource);
 
-                // jsDelivr blocks files >= 20MB from GitHub (re3.data parts 000-004 are 20MB each)
-                var dataMatch = url.match(/re3\.data\.\d+/);
-                if (dataMatch) {
-                    var rawUrl = "https://raw.githubusercontent.com/woahhcrackers/GTA3Web/main/" + dataMatch[0];
-                    if (resource instanceof Request) {
-                        return _origFetch(new Request(rawUrl, resource), init);
+                // Any asset request for GTA3Web (audio/, re3.data.*, models/, txd/, lazy_manifest.json, re3.wasm)
+                // Routed directly to raw.githubusercontent.com to avoid jsDelivr 20MB limit and 503/CORS errors
+                if (url.indexOf("woahhcrackers/GTA3Web") !== -1 ||
+                    url.indexOf("re3.data.") !== -1 ||
+                    url.indexOf("audio/") !== -1 ||
+                    url.indexOf("models/") !== -1 ||
+                    url.indexOf("txd/") !== -1 ||
+                    url.indexOf("lazy_manifest.json") !== -1 ||
+                    url.indexOf("re3.wasm") !== -1) {
+
+                    var target = url;
+                    if (target.indexOf("cdn.jsdelivr.net/gh/woahhcrackers/GTA3Web") !== -1) {
+                        target = target.replace(/https:\/\/cdn\.jsdelivr\.net\/gh\/woahhcrackers\/GTA3Web@[^/]+\//, RAW_ROOT);
+                    } else if (target.indexOf("http://") !== 0 && target.indexOf("https://") !== 0) {
+                        target = RAW_ROOT + target.replace(/^\.?\//, "");
                     }
-                    return _origFetch(rawUrl, init);
+
+                    if (resource instanceof Request) {
+                        return _origFetch(new Request(target, resource), init);
+                    }
+                    return _origFetch(target, init);
                 }
 
-                try {
-                    var resp = await _origFetch(resource, init);
-                    if (!resp.ok && url.indexOf("cdn.jsdelivr.net/gh/woahhcrackers/GTA3Web") !== -1) {
-                        var fallbackUrl = url.replace(/https:\/\/cdn\.jsdelivr\.net\/gh\/woahhcrackers\/GTA3Web@[^/]+\//, "https://raw.githubusercontent.com/woahhcrackers/GTA3Web/main/");
-                        return _origFetch(fallbackUrl, init);
-                    }
-                    return resp;
-                } catch(e) {
-                    if (url.indexOf("cdn.jsdelivr.net/gh/woahhcrackers/GTA3Web") !== -1) {
-                        var fallbackUrl2 = url.replace(/https:\/\/cdn\.jsdelivr\.net\/gh\/woahhcrackers\/GTA3Web@[^/]+\//, "https://raw.githubusercontent.com/woahhcrackers/GTA3Web/main/");
-                        return _origFetch(fallbackUrl2, init);
-                    }
-                    throw e;
-                }
+                return _origFetch(resource, init);
             };
         })();
     </script>
@@ -142,9 +143,9 @@
 		position: fixed;
 		inset: 0;
 		z-index: 900;
-		background: #000;
+		background: radial-gradient(circle at center, #181926 0%, #0b0c13 100%);
 		color: #ccc;
-		font-family: "Consolas", "Menlo", monospace;
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -154,33 +155,94 @@
 		padding: 24px;
 		box-sizing: border-box;
 	}
+	.loader-logo {
+		font-size: 38px;
+		font-weight: 800;
+		color: #ffffff;
+		letter-spacing: 3px;
+		margin-bottom: 2px;
+		text-shadow: 0 0 25px rgba(10, 255, 206, 0.45), 0 2px 4px rgba(0,0,0,0.8);
+		font-family: "Outfit", sans-serif;
+	}
 	#loadingOverlay .spinner {
-		width: 40px;
-		height: 40px;
+		width: 36px;
+		height: 36px;
 		border-radius: 50%;
-		border: 4px solid #333;
-		border-top-color: #6bb0ff;
+		border: 3px solid rgba(255, 255, 255, 0.1);
+		border-top-color: #0affce;
 		animation: loadingSpin 0.8s linear infinite;
 	}
 	@keyframes loadingSpin { to { transform: rotate(360deg); } }
 	#loadingStatus {
 		font-size: 14px;
-		color: #eee;
+		font-weight: 500;
+		color: #eaeaea;
 		max-width: 90vw;
 		word-break: break-word;
 	}
-	#loadingHint {
+	.progress-container {
+		width: 100%;
+		max-width: 420px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin-top: 4px;
+	}
+	.progress-bar-bg {
+		width: 100%;
+		height: 10px;
+		background: rgba(255, 255, 255, 0.08);
+		border-radius: 999px;
+		overflow: hidden;
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+	}
+	.progress-bar-fill {
+		height: 100%;
+		width: 0%;
+		background: linear-gradient(90deg, #0088ff, #0affce);
+		border-radius: 999px;
+		transition: width 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+		box-shadow: 0 0 12px rgba(10, 255, 206, 0.6);
+	}
+	.progress-info {
+		display: flex;
+		justify-content: space-between;
 		font-size: 12px;
 		color: #888;
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, monospace;
+	}
+	#progressPercent {
+		font-weight: 700;
+		color: #0affce;
+	}
+	#progressBytes {
+		color: #a1a1aa;
+	}
+	#loadingHint {
+		font-size: 12px;
+		color: #71717a;
+		max-width: 380px;
+		line-height: 1.5;
 	}
 </style>
 </head>
 <body>
 <canvas id="canvas"></canvas>
 <div id="loadingOverlay">
+	<div class="loader-logo">GTA III</div>
 	<div class="spinner"></div>
 	<div id="loadingStatus">Starting up...</div>
-	<div id="loadingHint">First load can take a few minutes (~860MB of game assets) - this is not frozen, keep this tab open.</div>
+	<div class="progress-container">
+		<div class="progress-bar-bg">
+			<div class="progress-bar-fill" id="progressBarFill"></div>
+		</div>
+		<div class="progress-info">
+			<span id="progressPercent">0%</span>
+			<span id="progressBytes">0 MB / ~95 MB</span>
+		</div>
+	</div>
+	<div id="loadingHint">Streaming game assets directly — please keep this tab open.</div>
 </div>
 <div id="crashOverlay">
 	<h1 id="crashTitle">The game has crashed</h1>
@@ -188,17 +250,41 @@
 	<pre id="crashDetail"></pre>
 </div>
 <script>
-	// Distinguishes "still loading" from "crashed" - without this, a slow ~860MB asset
-	// preload and a silent crash looked identical to the user. Shown by default, hidden only
-	// once the game reaches "Initialise: end" (see updateLoadingStatus below and Game.cpp's
-	// STEP macro). The crash overlay (above) takes over on top of this if something goes wrong
-	// mid-load instead of this ever silently disappearing.
+	// Distinguishes "still loading" from "crashed"
+	var barFill = document.getElementById('progressBarFill');
+	var pctText = document.getElementById('progressPercent');
+	var bytesText = document.getElementById('progressBytes');
+	var statusEl = document.getElementById('loadingStatus');
+
 	function updateLoadingStatus(s) {
-		var el = document.getElementById('loadingStatus');
-		if (el) el.textContent = s;
+		if (statusEl) statusEl.textContent = s;
+		if (s) {
+			var match = s.match(/\((\d+)\/(\d+)\)/);
+			if (match && barFill) {
+				var loaded = parseInt(match[1], 10);
+				var total = parseInt(match[2], 10);
+				if (total > 0) {
+					var pct = Math.min(100, Math.round((loaded / total) * 100));
+					barFill.style.width = pct + '%';
+					if (pctText) pctText.textContent = pct + '%';
+					if (bytesText) {
+						bytesText.textContent = (loaded / 1048576).toFixed(1) + ' MB / ' + (total / 1048576).toFixed(1) + ' MB';
+					}
+				}
+			} else if (s.indexOf('Running') !== -1 || s.indexOf('Initialise') !== -1) {
+				if (barFill) barFill.style.width = '100%';
+				if (pctText) pctText.textContent = '100%';
+				if (bytesText) bytesText.textContent = 'Initializing engine...';
+			}
+		}
+
 		if (s === 'Initialise: end') {
 			var overlay = document.getElementById('loadingOverlay');
-			if (overlay) overlay.style.display = 'none';
+			if (overlay) {
+				overlay.style.transition = 'opacity 0.4s ease-out';
+				overlay.style.opacity = '0';
+				setTimeout(function() { overlay.style.display = 'none'; }, 400);
+			}
 		}
 	}
 </script>
