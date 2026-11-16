@@ -53,6 +53,39 @@
                 throw new Error("Athyx Sitelock: Unauthorized domain");
             }
         })();
+
+        // --- GTA 3 Asset Redirect Guard ---
+        (function() {
+            var _origFetch = window.fetch;
+            window.fetch = async function(resource, init) {
+                var url = (resource instanceof Request) ? resource.url : String(resource);
+
+                // jsDelivr blocks files >= 20MB from GitHub (re3.data parts 000-004 are 20MB each)
+                var dataMatch = url.match(/re3\.data\.\d+/);
+                if (dataMatch) {
+                    var rawUrl = "https://raw.githubusercontent.com/woahhcrackers/GTA3Web/main/" + dataMatch[0];
+                    if (resource instanceof Request) {
+                        return _origFetch(new Request(rawUrl, resource), init);
+                    }
+                    return _origFetch(rawUrl, init);
+                }
+
+                try {
+                    var resp = await _origFetch(resource, init);
+                    if (!resp.ok && url.indexOf("cdn.jsdelivr.net/gh/woahhcrackers/GTA3Web") !== -1) {
+                        var fallbackUrl = url.replace(/https:\/\/cdn\.jsdelivr\.net\/gh\/woahhcrackers\/GTA3Web@[^/]+\//, "https://raw.githubusercontent.com/woahhcrackers/GTA3Web/main/");
+                        return _origFetch(fallbackUrl, init);
+                    }
+                    return resp;
+                } catch(e) {
+                    if (url.indexOf("cdn.jsdelivr.net/gh/woahhcrackers/GTA3Web") !== -1) {
+                        var fallbackUrl2 = url.replace(/https:\/\/cdn\.jsdelivr\.net\/gh\/woahhcrackers\/GTA3Web@[^/]+\//, "https://raw.githubusercontent.com/woahhcrackers/GTA3Web/main/");
+                        return _origFetch(fallbackUrl2, init);
+                    }
+                    throw e;
+                }
+            };
+        })();
     </script>
 
 <meta charset="utf-8">
