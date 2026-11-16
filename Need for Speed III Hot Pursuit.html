@@ -11,20 +11,59 @@
       height: 100%;
       background: #000;
       overflow: hidden;
+      font-family: system-ui, sans-serif;
+      color: #fff;
+    }
+    #loader {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #000;
+      z-index: 10;
     }
   </style>
 </head>
 <body>
+  <div id="loader">Loading Need for Speed III: Hot Pursuit... (0/19)</div>
   <div id="game"></div>
   <script>
-    window.EJS_player = '#game';
-    window.EJS_core = 'pcsx_rearmed';
-    window.EJS_gameUrl = 'https://pub-ecf8858fba2d4e85a9fe3078ee5effef.r2.dev/games/nfs-hot-pursuit/nfs-hot-pursuit.chd';
-    window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
-    window.EJS_startOnLoaded = true;
-    window.EJS_color = '#CCFF00';
-    window.EJS_backgroundColor = '#000000';
+    (async function () {
+      const TOTAL_PARTS = 19;
+      const BASE = 'https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Need%20for%20Speed%20III%20Hot%20Pursuit/nfs-hot-pursuit.chd.part';
+      const loader = document.getElementById('loader');
+      const chunks = new Array(TOTAL_PARTS);
+      let loaded = 0;
+
+      const indices = Array.from({ length: TOTAL_PARTS }, (_, i) => i);
+      await Promise.all(indices.map(async (i) => {
+        const suffix = String(i).padStart(2, '0');
+        const res = await fetch(BASE + suffix);
+        if (!res.ok) throw new Error('Failed to load part ' + suffix + ': ' + res.status);
+        chunks[i] = await res.arrayBuffer();
+        loaded++;
+        loader.textContent = `Loading Need for Speed III: Hot Pursuit... (${loaded}/${TOTAL_PARTS})`;
+      }));
+
+      const blob = new Blob(chunks, { type: 'application/octet-stream' });
+      const blobUrl = URL.createObjectURL(blob);
+      loader.remove();
+
+      window.EJS_player = '#game';
+      window.EJS_core = 'pcsx_rearmed';
+      window.EJS_gameUrl = blobUrl;
+      window.EJS_pathtodata = 'https://cdn.emulatorjs.org/stable/data/';
+      window.EJS_startOnLoaded = true;
+      window.EJS_color = '#CCFF00';
+      window.EJS_backgroundColor = '#000000';
+
+      const s = document.createElement('script');
+      s.src = 'https://cdn.emulatorjs.org/stable/data/loader.js';
+      document.body.appendChild(s);
+    })();
   </script>
-  <script src="https://cdn.emulatorjs.org/stable/data/loader.js"></script>
 </body>
 </html>
