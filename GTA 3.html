@@ -256,6 +256,24 @@
 	var bytesText = document.getElementById('progressBytes');
 	var statusEl = document.getElementById('loadingStatus');
 
+	var overlayHidden = false;
+	function hideOverlay() {
+		if (overlayHidden) return;
+		overlayHidden = true;
+		var overlay = document.getElementById('loadingOverlay');
+		if (overlay) {
+			overlay.style.transition = 'opacity 0.4s ease-out';
+			overlay.style.opacity = '0';
+			setTimeout(function() { overlay.style.display = 'none'; }, 400);
+		}
+	}
+
+	document.getElementById('loadingOverlay')?.addEventListener('click', function() {
+		if (barFill && (barFill.style.width === '100%' || parseInt(barFill.style.width) >= 90)) {
+			hideOverlay();
+		}
+	});
+
 	function updateLoadingStatus(s) {
 		if (statusEl) statusEl.textContent = s;
 		if (s) {
@@ -270,21 +288,22 @@
 					if (bytesText) {
 						bytesText.textContent = (loaded / 1048576).toFixed(1) + ' MB / ' + (total / 1048576).toFixed(1) + ' MB';
 					}
+					if (pct >= 100) {
+						setTimeout(hideOverlay, 1500);
+					}
 				}
 			} else if (s.indexOf('Running') !== -1 || s.indexOf('Initialise') !== -1) {
 				if (barFill) barFill.style.width = '100%';
 				if (pctText) pctText.textContent = '100%';
-				if (bytesText) bytesText.textContent = 'Initializing engine...';
+				if (bytesText) bytesText.textContent = 'Starting engine...';
+				setTimeout(hideOverlay, 1200);
 			}
+		} else if (s === '') {
+			setTimeout(hideOverlay, 1000);
 		}
 
 		if (s === 'Initialise: end') {
-			var overlay = document.getElementById('loadingOverlay');
-			if (overlay) {
-				overlay.style.transition = 'opacity 0.4s ease-out';
-				overlay.style.opacity = '0';
-				setTimeout(function() { overlay.style.display = 'none'; }, 400);
-			}
+			hideOverlay();
 		}
 	}
 </script>
@@ -311,17 +330,22 @@
 
 	var Module = {
 		canvas: document.getElementById('canvas'),
-		print: function (s) { pushLog(s); console.log(s); },
+		print: function (s) {
+			pushLog(s);
+			console.log(s);
+			if (s && (s.indexOf('OpenGL') !== -1 || s.indexOf('cdvd_stream') !== -1 || s.indexOf('Initialise') !== -1 || s.indexOf('Audio') !== -1)) {
+				setTimeout(hideOverlay, 1000);
+			}
+		},
 		printErr: function (s) { pushLog(s); console.error(s); },
 		onAbort: function (what) { showCrash('Emscripten abort', String(what)); },
-		// Called by the generated re3.js loader itself during the re3.data download/decompress
-		// phase (before any of our own C++ STEP() checkpoints can run) - this is the biggest
-		// chunk of the "5 minutes with nothing on screen" complaint, so surface it too.
-		setStatus: function (s) { if (s) updateLoadingStatus(s); },
-		// Save games live under /userfiles in Emscripten's in-memory filesystem, which is
-		// wiped on every reload unless backed by something real - mount IDBFS there and
-		// pull down whatever was persisted last time before main() runs. C++ persists new
-		// writes back out via FS.syncfs(false, ...) after a save completes (see PCSave.cpp).
+		setStatus: function (s) { updateLoadingStatus(s); },
+		onRuntimeInitialized: function() {
+			setTimeout(hideOverlay, 2000);
+		},
+		postRun: [function () {
+			setTimeout(hideOverlay, 1500);
+		}],
 		preRun: [function () {
 			FS.mkdir('/userfiles');
 			FS.mount(IDBFS, {}, '/userfiles');
