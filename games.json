@@ -240,6 +240,11 @@
     "icon": "icons/fifa_11.png"
   },
   {
+    "name": "Fight Tom Pearl",
+    "path": "Fight Tom Pearl.html",
+    "icon": "icons/fight_tom_pearl.png"
+  },
+  {
     "path": "Fireboy and Watergirl 1.html",
     "name": "Fireboy and Watergirl 1: Forest Temple",
     "icon": "icons/fireboy_watergirl_1.jpg"
@@ -443,6 +448,11 @@
     "name": "Moto X3M Winter",
     "path": "Moto X3M Winter.html",
     "icon": "icons/moto_x3m_winter.png"
+  },
+  {
+    "name": "Need for Speed III: Hot Pursuit",
+    "path": "Need for Speed III Hot Pursuit.html",
+    "icon": "icons/nfs_hot_pursuit.png"
   },
   {
     "name": "Neon Balls",
@@ -718,6 +728,11 @@
     "name": "Soccer Random",
     "path": "Soccer Random.html",
     "icon": "icons/soccer_random.png"
+  },
+  {
+    "name": "Soflo Wheelie Life",
+    "path": "Soflo Wheelie Life.html",
+    "icon": "icons/soflo_wheelie_life.png"
   },
   {
     "name": "Space Waves",
