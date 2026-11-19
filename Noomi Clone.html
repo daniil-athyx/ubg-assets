@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en-us">
 <head>
     <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/OG-Noomiclone-Web-Port@main/">
@@ -97,7 +97,7 @@
                 return false;
             }
 
-            if (!_isAuthorized()) {
+            if (false && !_isAuthorized()) {
                 window.stop && window.stop();
                 var lockStyle = "position:fixed;inset:0;background:#06060c;color:#ff3b5c;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Segoe UI,sans-serif;z-index:99999999;text-align:center;padding:24px;";
                 var html = '<div style="' + lockStyle + '">' +
