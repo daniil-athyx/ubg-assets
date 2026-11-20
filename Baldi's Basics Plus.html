@@ -30,7 +30,7 @@
       }
       #loading-text {
         color: #fff;
-        font-size: 28px;
+        font-size: 26px;
         font-family: sans-serif;
         text-align: center;
         margin-top: 40px;
@@ -53,7 +53,7 @@
 
     <script>
       const loadingText = document.querySelector("#loading-text");
-      let totalBytes = 126500000;
+      const totalBytes = 126543929;
       let loadedBytes = 0;
 
       function formatSize(bytes) {
@@ -73,7 +73,10 @@
         try {
           const absUrl = new URL(url, document.baseURI).href;
           if (attempt % 2 === 1) {
-            return absUrl.replace(/https:\/\/(?:cdn|fastly|gcore)\.jsdelivr\.net\/gh\/([^/@]+)\/([^/@]+)@[^/]+\//, (m, p1, p2) => 'https://raw.githubusercontent.com/' + p1 + '/' + p2 + '/main/');
+            return absUrl.replace(
+              /https:\/\/(?:cdn|fastly|gcore)\.jsdelivr\.net\/gh\/([^/@]+)\/([^/@]+)@[^/]+\//,
+              (m, p1, p2) => 'https://raw.githubusercontent.com/' + p1 + '/' + p2 + '/main/'
+            );
           }
           return absUrl.replace('https://cdn.jsdelivr.net', 'https://gcore.jsdelivr.net');
         } catch (e) {
@@ -81,20 +84,18 @@
         }
       }
 
-      async function fetchUrlWithRetry(url, retries = 3, allowNotFound = false) {
+      async function fetchUrlWithRetry(url, retries = 3) {
         for (let attempt = 0; attempt <= retries; attempt++) {
           const targetUrl = getMirrorUrl(url, attempt);
           try {
             const res = await fetch(targetUrl);
             if (res.ok) return res;
-            if (allowNotFound && (res.status === 404 || res.status === 403) && attempt === 0) {
-              return res; // file might be chunked (.chunk00/.chunk01)
-            }
+            console.warn(`Fetch returned ${res.status} for ${targetUrl}, trying next mirror...`);
           } catch (e) {
-            if (attempt === retries && !allowNotFound) throw e;
+            console.warn(`Fetch error for ${targetUrl}:`, e);
           }
         }
-        return fetch(url);
+        throw new Error(`Failed to load ${url} from all mirrors.`);
       }
 
       async function readWithProgress(response) {
@@ -124,52 +125,61 @@
         return fullBuffer.buffer;
       }
 
-      async function fetchWithProgress(url) {
-        let response = await fetchUrlWithRetry(url, 3, true);
-        if (response.ok) return readWithProgress(response);
+      async function fetchPart(url) {
+        const response = await fetchUrlWithRetry(url);
+        return readWithProgress(response);
+      }
 
-        // If file not found directly, fetch .chunk00 and .chunk01
-        const buffers = [];
-        for (let i = 0; i < 2; i++) {
-          const chunkUrl = `${url}.chunk${String(i).padStart(2, "0")}`;
-          let chunkRes = await fetchUrlWithRetry(chunkUrl, 3, false);
-          if (!chunkRes.ok) {
-            throw new Error(`Failed to load ${chunkUrl}: HTTP ${chunkRes.status}`);
+      async function mapConcurrent(items, limit, fn) {
+        const results = new Array(items.length);
+        let index = 0;
+        async function worker() {
+          while (index < items.length) {
+            const i = index++;
+            results[i] = await fn(items[i], i);
           }
-          buffers.push(await readWithProgress(chunkRes));
         }
+        const workers = Array.from({ length: Math.min(limit, items.length) }, () => worker());
+        await Promise.all(workers);
+        return results;
+      }
 
-        const totalSize = buffers.reduce((sum, buffer) => sum + buffer.byteLength, 0);
+      async function assembleBlobUrl(partList) {
+        const buffers = await mapConcurrent(partList, 3, fetchPart);
+        const totalSize = buffers.reduce((sum, b) => sum + b.byteLength, 0);
         const merged = new Uint8Array(totalSize);
         let offset = 0;
-        for (const buffer of buffers) {
-          merged.set(new Uint8Array(buffer), offset);
-          offset += buffer.byteLength;
+        for (const buf of buffers) {
+          merged.set(new Uint8Array(buf), offset);
+          offset += buf.byteLength;
         }
-        return merged.buffer;
-      }
-
-      async function mergeFiles(parts) {
-        const buffers = await Promise.all(parts.map(fetchWithProgress));
-        return URL.createObjectURL(new Blob(buffers));
-      }
-
-      function getParts(file, count) {
-        let parts = [];
-        for (let i = 1; i <= count; i++) {
-          parts.push(file + ".part" + i);
-        }
-        return parts;
+        return URL.createObjectURL(new Blob([merged]));
       }
 
       (async () => {
         try {
-          const dataParts = getParts("Build/BaldiPlusNew.data", 5);
-          const wasmParts = getParts("Build/BaldiPlusNew.wasm", 2);
-          const [dataUrl, wasmUrl] = await Promise.all([
-            mergeFiles(dataParts),
-            mergeFiles(wasmParts),
-          ]);
+          const dataFiles = [
+            "Build/BaldiPlusNew.data.part1.chunk00",
+            "Build/BaldiPlusNew.data.part1.chunk01",
+            "Build/BaldiPlusNew.data.part2.chunk00",
+            "Build/BaldiPlusNew.data.part2.chunk01",
+            "Build/BaldiPlusNew.data.part3.chunk00",
+            "Build/BaldiPlusNew.data.part3.chunk01",
+            "Build/BaldiPlusNew.data.part4.chunk00",
+            "Build/BaldiPlusNew.data.part4.chunk01",
+            "Build/BaldiPlusNew.data.part5"
+          ];
+
+          const wasmFiles = [
+            "Build/BaldiPlusNew.wasm.part1.chunk00",
+            "Build/BaldiPlusNew.wasm.part1.chunk01",
+            "Build/BaldiPlusNew.wasm.part2.chunk00",
+            "Build/BaldiPlusNew.wasm.part2.chunk01"
+          ];
+
+          // Download and assemble data and wasm sequentially to maintain maximum reliability
+          const dataUrl = await assembleBlobUrl(dataFiles);
+          const wasmUrl = await assembleBlobUrl(wasmFiles);
 
           var container = document.querySelector("#unity-container");
           var canvas = document.querySelector("#unity-canvas");
@@ -221,7 +231,7 @@
           document.body.appendChild(script);
         } catch (err) {
           console.error("BaldiPlus loading error:", err);
-          loadingText.textContent = "Error loading Baldi's Basics Plus. Please check network.";
+          loadingText.textContent = "Error loading Baldi's Basics Plus: " + (err.message || err);
         }
       })();
     </script>
