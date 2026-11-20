@@ -2,50 +2,6 @@
 <html lang="en-us">
 
 <head>
-    <script>
-        // --- Athyx Sitelock Security Guard ---
-        (function () {
-            var _k = ["YXRoeXgtbmV0d29yay53ZWIuYXBw", "YXRoeXgtbmV0d29yay5maXJlYmFzZWFwcC5jb20=", "bG9jYWxob3N0", "MTI3LjAuMC4x", "ZGFuaWlsLWF0aHl4LmdpdGh1Yi5pbw=="];
-            var _domains = _k.map(function (s) { try { return atob(s).toLowerCase(); } catch (e) { return ""; } });
-
-            function _isAuthorized() {
-                var current = (window.location && window.location.hostname) ? window.location.hostname.toLowerCase() : "";
-                if (_domains.indexOf(current) !== -1) return true;
-
-                if (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0) {
-                    for (var i = 0; i < window.location.ancestorOrigins.length; i++) {
-                        try {
-                            var aHost = new URL(window.location.ancestorOrigins[i]).hostname.toLowerCase();
-                            if (_domains.indexOf(aHost) !== -1) return true;
-                        } catch (e) { }
-                    }
-                    return false;
-                }
-
-                if (document.referrer) {
-                    try {
-                        var refHost = new URL(document.referrer).hostname.toLowerCase();
-                        if (_domains.indexOf(refHost) !== -1) return true;
-                    } catch (e) { }
-                }
-
-                try {
-                    if (window.parent && window.parent.location && window.parent.location.hostname) {
-                        if (_domains.indexOf(window.parent.location.hostname.toLowerCase()) !== -1) return true;
-                    }
-                } catch (e) { }
-
-                return false;
-            }
-
-            if (false && !_isAuthorized()) {
-                window.stop && window.stop();
-                document.documentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;background:#0d0e15;color:#fff;font-family:sans-serif;text-align:center;padding:20px;"><div><h1 style="color:#f43f5e;font-size:32px;margin-bottom:12px;">Access Restricted</h1><p style="color:#94a3b8;font-size:16px;max-width:500px;line-height:1.6;margin:0 auto 24px;">This game is protected and authorized for playback exclusively on <b>Athyx Network</b>.</p><a href="https://athyx-network.web.app/" target="_blank" style="display:inline-block;background:#3b82f6;color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-weight:600;box-shadow:0 4px 14px rgba(59,130,246,0.4);">Play on Athyx Network</a></div></div>';
-                throw new Error("Athyx Sitelock: Unauthorized domain access blocked.");
-            }
-        })();
-    </script>
-
     <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Baldi's%20Basics%20Remastered/">
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -67,13 +23,21 @@
             height: 100%;
             display: block;
         }
+
+        #loading-text {
+            color: white;
+            font-size: 28px;
+            font-family: sans-serif;
+            text-align: center;
+            margin-top: 40px;
+            position: relative;
+            z-index: 10;
+        }
     </style>
 </head>
 
 <body>
-    <div id="loading-text"
-        style="color: white; font-size: 48px; font-family: cursive; text-align: center; margin-top: 20px;"> LOADING...
-    </div>
+    <div id="loading-text">LOADING...</div>
     <canvas id="unity-canvas" tabindex="-1"></canvas>
     <script src="Build/WebGL.loader.js"></script>
     <script>
@@ -83,8 +47,9 @@
             meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
             document.getElementsByTagName('head')[0].appendChild(meta);
         }
+
         const loadingText = document.querySelector("#loading-text");
-        let totalBytes = 0;
+        const totalBytes = 111383205;
         let loadedBytes = 0;
 
         function formatSize(bytes) {
@@ -98,33 +63,53 @@
                 return bytes + " B";
             }
         }
-        async function getSize(url) {
+
+        function getMirrorUrl(url, attempt) {
+            if (attempt === 0) return url;
             try {
-                const res = await fetch(url, {
-                    method: "HEAD"
-                });
-                return parseInt(res.headers.get("Content-Length") || "0", 10);
-            } catch {
-                return 0;
+                const absUrl = new URL(url, document.baseURI).href;
+                if (attempt % 2 === 1) {
+                    return absUrl.replace(
+                        /https:\/\/(?:cdn|fastly|gcore)\.jsdelivr\.net\/gh\/([^/@]+)\/([^/@]+)@[^/]+\//,
+                        (m, p1, p2) => 'https://raw.githubusercontent.com/' + p1 + '/' + p2 + '/main/'
+                    );
+                }
+                return absUrl.replace('https://cdn.jsdelivr.net', 'https://gcore.jsdelivr.net');
+            } catch (e) {
+                return url;
             }
         }
-        async function fetchWithProgress(url) {
-            const response = await fetch(url);
+
+        async function fetchUrlWithRetry(url, retries = 3) {
+            for (let attempt = 0; attempt <= retries; attempt++) {
+                const targetUrl = getMirrorUrl(url, attempt);
+                try {
+                    const res = await fetch(targetUrl);
+                    if (res.ok) return res;
+                    console.warn(`Fetch returned ${res.status} for ${targetUrl}, trying next mirror...`);
+                } catch (e) {
+                    console.warn(`Fetch error for ${targetUrl}:`, e);
+                }
+            }
+            throw new Error(`Failed to load ${url} from all mirrors.`);
+        }
+
+        async function readWithProgress(response) {
+            if (!response.ok) {
+                throw new Error(`Failed to load ${response.url}: HTTP ${response.status}`);
+            }
             const reader = response.body.getReader();
             let chunks = [];
             let received = 0;
             while (true) {
-                const {
-                    done,
-                    value
-                } = await reader.read();
+                const { done, value } = await reader.read();
                 if (done) break;
                 received += value.length;
                 loadedBytes += value.length;
                 chunks.push(value);
                 const doneText = formatSize(loadedBytes);
                 const totalText = formatSize(totalBytes);
-                const percent = totalBytes > 0 ? ((loadedBytes / totalBytes) * 100).toFixed(1) : "?";
+                const percent = totalBytes > 0 ? Math.min(100, (loadedBytes / totalBytes) * 100).toFixed(1) : "?";
                 loadingText.textContent = `LOADING... ${doneText} / ${totalText} (${percent}%)`;
             }
             let fullBuffer = new Uint8Array(received);
@@ -135,39 +120,79 @@
             }
             return fullBuffer.buffer;
         }
-        async function mergeFiles(parts) {
-            const buffers = await Promise.all(parts.map(fetchWithProgress));
-            return URL.createObjectURL(new Blob(buffers));
+
+        async function fetchPart(url) {
+            const response = await fetchUrlWithRetry(url);
+            return readWithProgress(response);
         }
 
-        function getParts(file, count) {
-            let parts = [];
-            for (let i = 1; i <= count; i++) {
-                parts.push(file + ".part" + i);
+        async function mapConcurrent(items, limit, fn) {
+            const results = new Array(items.length);
+            let index = 0;
+            async function worker() {
+                while (index < items.length) {
+                    const i = index++;
+                    results[i] = await fn(items[i], i);
+                }
             }
-            return parts;
+            const workers = Array.from({ length: Math.min(limit, items.length) }, () => worker());
+            await Promise.all(workers);
+            return results;
         }
+
+        async function assembleBlobUrl(partList) {
+            const buffers = await mapConcurrent(partList, 3, fetchPart);
+            const totalSize = buffers.reduce((sum, b) => sum + b.byteLength, 0);
+            const merged = new Uint8Array(totalSize);
+            let offset = 0;
+            for (const buf of buffers) {
+                merged.set(new Uint8Array(buf), offset);
+                offset += buf.byteLength;
+            }
+            return URL.createObjectURL(new Blob([merged]));
+        }
+
         (async () => {
-            const dataParts = getParts("Build/WebGL.data", 3);
-            const wasmParts = getParts("Build/WebGL.wasm", 3);
-            const allParts = [...dataParts, ...wasmParts];
-            const sizes = await Promise.all(allParts.map(getSize));
-            totalBytes = sizes.reduce((a, b) => a + b, 0);
-            const [dataUrl, wasmUrl] = await Promise.all([
-                mergeFiles(dataParts),
-                mergeFiles(wasmParts)
-            ]);
-            createUnityInstance(document.querySelector("#unity-canvas"), {
-                dataUrl: dataUrl,
-                frameworkUrl: "Build/WebGL.framework.js",
-                codeUrl: wasmUrl,
-                streamingAssetsUrl: "StreamingAssets",
-                companyName: "Basically Games",
-                productName: "Baldi's Basics Classic Remastered",
-                productVersion: "1.1",
-            }).then(() => {
-                loadingText.remove();
-            });
+            try {
+                const dataFiles = [
+                    "Build/WebGL.data.part1.chunk00",
+                    "Build/WebGL.data.part1.chunk01",
+                    "Build/WebGL.data.part2.chunk00",
+                    "Build/WebGL.data.part2.chunk01",
+                    "Build/WebGL.data.part3"
+                ];
+
+                const wasmFiles = [
+                    "Build/WebGL.wasm.part1.chunk00",
+                    "Build/WebGL.wasm.part1.chunk01",
+                    "Build/WebGL.wasm.part2.chunk00",
+                    "Build/WebGL.wasm.part2.chunk01",
+                    "Build/WebGL.wasm.part3"
+                ];
+
+                const [dataUrl, wasmUrl] = await Promise.all([
+                    assembleBlobUrl(dataFiles),
+                    assembleBlobUrl(wasmFiles)
+                ]);
+
+                createUnityInstance(document.querySelector("#unity-canvas"), {
+                    dataUrl: dataUrl,
+                    frameworkUrl: "Build/WebGL.framework.js",
+                    codeUrl: wasmUrl,
+                    streamingAssetsUrl: "StreamingAssets",
+                    companyName: "Basically Games",
+                    productName: "Baldi's Basics Classic Remastered",
+                    productVersion: "1.1",
+                }).then(() => {
+                    loadingText.remove();
+                }).catch((err) => {
+                    console.error("Unity instantiation error:", err);
+                    alert("Unity error: " + err);
+                });
+            } catch (err) {
+                console.error("Baldi Remastered loading error:", err);
+                loadingText.textContent = "Error loading Baldi's Basics Classic Remastered. Please check network.";
+            }
         })();
     </script>
 </body>
