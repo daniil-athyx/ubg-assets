@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en-us">
   <head>
     <base href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Baldis-Fun-New-School/">
@@ -84,7 +84,7 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/BFNSPUE Alpha 6 Part 2b WebGL.loader.js";
+      var loaderUrl = "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Baldis-Fun-New-School/Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.loader.js";
 
       const totalBytes = 189000000;
       let loadedBytes = 0;
@@ -97,9 +97,12 @@
       }
 
       function getMirrorUrl(url, attempt) {
-        if (attempt === 0) return url;
+        const clean = encodeURI(decodeURI(url));
+        if (attempt === 0) {
+          try { return new URL(clean, document.baseURI).href; } catch(e) { return clean; }
+        }
         try {
-          const absUrl = new URL(url, document.baseURI).href;
+          const absUrl = new URL(clean, document.baseURI).href;
           if (attempt % 2 === 1) {
             return absUrl.replace(
               /https:\/\/(?:cdn|fastly|gcore)\.jsdelivr\.net\/gh\/([^/@]+)\/([^/@]+)@[^/]+\//,
@@ -108,7 +111,7 @@
           }
           return absUrl.replace('https://cdn.jsdelivr.net', 'https://gcore.jsdelivr.net');
         } catch (e) {
-          return url;
+          return clean;
         }
       }
 
@@ -187,29 +190,29 @@
       (async () => {
         try {
           const dataFiles = [
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part1.chunk00",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part1.chunk01",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part2.chunk00",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part2.chunk01",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part3.chunk00",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part3.chunk01",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part4.chunk00",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part4.chunk01",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part5.chunk00",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part5.chunk01",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part6.chunk00",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part6.chunk01",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part7.chunk00",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part7.chunk01",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part8.chunk00",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part8.chunk01",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.data.part9"
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part1.chunk00",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part1.chunk01",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part2.chunk00",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part2.chunk01",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part3.chunk00",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part3.chunk01",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part4.chunk00",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part4.chunk01",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part5.chunk00",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part5.chunk01",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part6.chunk00",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part6.chunk01",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part7.chunk00",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part7.chunk01",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part8.chunk00",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part8.chunk01",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.data.part9"
           ];
 
           const wasmFiles = [
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.wasm.part1.chunk00",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.wasm.part1.chunk01",
-            "Build/BFNSPUE Alpha 6 Part 2b WebGL.wasm.part2"
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.wasm.part1.chunk00",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.wasm.part1.chunk01",
+            "Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.wasm.part2"
           ];
 
           const [dataUrl, wasmUrl] = await Promise.all([
@@ -219,9 +222,9 @@
 
           var config = {
             dataUrl: dataUrl,
-            frameworkUrl: buildUrl + "/BFNSPUE Alpha 6 Part 2b WebGL.framework.js",
+            frameworkUrl: "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Baldis-Fun-New-School/Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.framework.js",
             codeUrl: wasmUrl,
-            streamingAssetsUrl: "StreamingAssets",
+            streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Baldis-Fun-New-School/StreamingAssets",
             companyName: "JohnsterSpaceGames",
             productName: "Baldi's Fun New School Plus Ultimate Edition",
             productVersion: "0.2.5b",
@@ -236,7 +239,7 @@
             canvas.style.width = "960px";
             canvas.style.height = "600px";
           }
-          canvas.style.background = "url('" + buildUrl + "/BFNSPUE Alpha 6 Part 2b WebGL.jpg') center / cover";
+          canvas.style.background = "url('https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Baldis-Fun-New-School/Build/BFNSPUE%20Alpha%206%20Part%202b%20WebGL.jpg') center / cover";
           loadingBar.style.display = "block";
 
           var script = document.createElement("script");
