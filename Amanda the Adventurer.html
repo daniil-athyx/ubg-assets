@@ -141,20 +141,30 @@
             return out.buffer;
         }
 
+        
+        function getMirrorUrl(url, attempt) {
+            if (attempt === 0) return url;
+            if (attempt % 2 === 1) {
+                return url.replace(/https:\/\/(?:cdn|fastly|gcore)\.jsdelivr\.net\/gh\/([^/@]+)\/([^/@]+)@[^/]+\//, (m, p1, p2) => 'https://raw.githubusercontent.com/' + p1 + '/' + p2 + '/main/');
+            }
+            return url.replace('https://cdn.jsdelivr.net', 'https://gcore.jsdelivr.net');
+        }
+
         async function fetchSingleWithRetry(url, retries = MAX_RETRIES) {
             for (let attempt = 0; attempt <= retries; attempt++) {
+                const targetUrl = getMirrorUrl(url, attempt);
                 try {
                     if (attempt > 0) {
                         activeProgress.delete(url);
                         updateUI();
                     }
-                    const res = await originalFetch(url);
-                    if (!res.ok) throw new Error("HTTP " + res.status + " for " + url);
+                    const res = await originalFetch(targetUrl);
+                    if (!res.ok) throw new Error("HTTP " + res.status + " for " + targetUrl);
                     return await readStreamWithProgress(res, url);
                 } catch (err) {
                     activeProgress.delete(url);
                     if (attempt < retries) {
-                        console.warn(`Retry ${attempt + 1}/${retries} for ${url}:`, err.message);
+                        console.warn(`Retry ${attempt + 1}/${retries} for ${url} (using ${targetUrl}):`, err.message);
                         await sleep(RETRY_DELAY_MS * (attempt + 1));
                     } else {
                         throw err;
