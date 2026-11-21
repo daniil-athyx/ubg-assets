@@ -16,10 +16,25 @@
     <div id="content"></div>
     <div id="loader">Loading...</div>
     <div id="orientation"></div>
+    <script id="gamedistribution-jssdk"></script>
     <script type="text/javascript">
-      var BASE_URL = "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Vex%207/";
+      window.version = "fix-this";
+      window.libs = [];
+      window.gdsdk = {
+        showAd: function() { return Promise.resolve(); },
+        showBanner: function() { return Promise.resolve(); },
+        preloadAd: function() { return Promise.resolve(); },
+        init: function() { return Promise.resolve(); },
+        sendEvent: function() {},
+        getSession: function() { return {}; }
+      };
+      window.GD_OPTIONS = {
+        gameId: "0c454c9562d249d28ba3a2b50564042c",
+        advertisementSettings: { autoplay: false },
+        onEvent: function() {}
+      };
       var _azerionIntegration = {
-        rtgEnabled: true,
+        rtgEnabled: false,
         lbEnabled: false,
         fbType: "dummy",
         alxType: "std",
@@ -31,22 +46,25 @@
         cp: false,
       };
 
-      var libs = [];
-      var gameName = "vex7.min.js";
       var enableAnalytics, azAdWrapper, _azFeedback;
 
-      function addScript(src, buster, callback) {
+      window.addEventListener("load", function () {
         var s = document.createElement("script");
-        var fullSrc = src.indexOf("http") === 0 ? src : (BASE_URL + src);
-        s.setAttribute("src", fullSrc + "?v=" + buster);
-        if (typeof callback === "function") {
-          s.onload = callback;
-        }
+        s.src = "vex7.min.js";
+        s.onload = function () {
+          var loader = document.getElementById("loader");
+          if (loader) loader.style.display = "none";
+        };
+        s.onerror = function () {
+          var retry = document.createElement("script");
+          retry.src = "https://raw.githubusercontent.com/daniil-athyx/athyx-game-lib/main/Vex%207/vex7.min.js";
+          retry.onload = function () {
+            var loader = document.getElementById("loader");
+            if (loader) loader.style.display = "none";
+          };
+          document.body.appendChild(retry);
+        };
         document.body.appendChild(s);
-      }
-
-      addScript("version.js", Date.now(), function () {
-        addScript(gameName, version, function () {});
       });
     </script>
   </body>
