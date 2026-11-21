@@ -75,24 +75,29 @@
     <div id="orientation"></div>
 
     <script type="text/javascript">
-        var gameName = "vex8.min.js";
-        function addScript(src, buster, callback) {
-            var s = document.createElement('script');
-            s.setAttribute('src', src + '?v=' + buster);
-            if (typeof callback === 'function') {
-                s.onload = callback;
-            }
-            document.body.appendChild(s);
-        }
-
+        window.version = "tc-5";
+        window.libs = [];
         window.addEventListener("load", function() {
-            addScript('version.js', Date.now(), function() {
-                addScript(gameName, Date.now(), function() {
+            var s = document.createElement('script');
+            s.src = "vex8.min.js";
+            s.onload = function() {
+                var loader = document.getElementById("loader");
+                if (loader) loader.style.display = "none";
+                if (typeof Game !== "undefined") {
+                    new Game();
+                }
+            };
+            s.onerror = function() {
+                var retry = document.createElement('script');
+                retry.src = "https://raw.githubusercontent.com/daniil-athyx/athyx-game-lib/main/Vex%208/vex8.min.js";
+                retry.onload = function() {
                     var loader = document.getElementById("loader");
                     if (loader) loader.style.display = "none";
-                    new Game();
-                });
-            });
+                    if (typeof Game !== "undefined") new Game();
+                };
+                document.body.appendChild(retry);
+            };
+            document.body.appendChild(s);
         });
     </script>
 </body>
