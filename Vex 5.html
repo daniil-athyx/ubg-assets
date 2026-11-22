@@ -58,6 +58,15 @@
         addScript(gameName, version, function () {
           var loader = document.getElementById("loader");
           if (loader) loader.style.display = "none";
+          if (typeof MainMenuUI !== "undefined" && MainMenuUI.prototype && MainMenuUI.prototype.resize) {
+            var origResize = MainMenuUI.prototype.resize;
+            MainMenuUI.prototype.resize = function () {
+              if (!this.brandLogo) {
+                this.brandLogo = { x: 0, y: 0, width: 0, height: 0, visible: false, scale: { set: function() {} } };
+              }
+              return origResize.apply(this, arguments);
+            };
+          }
           new Vex5.Game();
         });
       });
