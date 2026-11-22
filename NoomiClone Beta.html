@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<base href="https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/noomiclone-beta/">
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no">
+	<title>NoomiClone Beta</title>
+	<link rel="shortcut icon" href="TemplateData/favicon.ico">
+	<link rel="stylesheet" href="TemplateData/style.css">
+	<script src="TemplateData/UnityProgress.js"></script>
+	<script src="Build/UnityLoader.js"></script>
+	<style>
+		*::-webkit-scrollbar, html::-webkit-scrollbar, body::-webkit-scrollbar {
+			display: none !important;
+			width: 0 !important;
+			height: 0 !important;
+		}
+		html, body {
+			margin: 0 !important;
+			padding: 0 !important;
+			width: 100vw !important;
+			height: 100vh !important;
+			overflow: hidden !important;
+			background: #231F20 !important;
+			scrollbar-width: none !important;
+			-ms-overflow-style: none !important;
+		}
+		.webgl-content {
+			position: absolute !important;
+			top: 0 !important;
+			left: 0 !important;
+			width: 100vw !important;
+			height: 100vh !important;
+			transform: none !important;
+			margin: 0 !important;
+			padding: 0 !important;
+		}
+		#unityContainer {
+			width: 100vw !important;
+			height: 100vh !important;
+		}
+	</style>
+	<script>
+		var unityInstance = UnityLoader.instantiate("unityContainer", "Build/webgl-4.json", {
+			onProgress: UnityProgress
+		});
+	</script>
+</head>
+<body>
+	<div class="webgl-content">
+		<div id="unityContainer"></div>
+	</div>
+</body>
+</html>

@@ -470,6 +470,11 @@
     "icon": "icons/noomicheems-classic.webp"
   },
   {
+    "name": "NoomiClone Beta",
+    "path": "NoomiClone Beta.html",
+    "icon": "icons/noomiclone-beta.webp"
+  },
+  {
     "name": "Obby 99% Will Lose",
     "path": "Obby 99% will lose.html",
     "icon": "icons/obby.webp"
