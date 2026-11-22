@@ -296,12 +296,20 @@
         const config = {
           dataUrl: dataBlobUrl,
           frameworkUrl: BASE_LIB_URL + '20261028-m3/Web.framework.js',
-          codeUrl: wasmBlobUrl,
+          codeUrl: dataBlobUrl,
           streamingAssetsUrl: BASE_LIB_URL + '20261028-m3/StreamingAssets',
           companyName: 'LocalRecovery',
           productName: 'NoomiCheems Classic Local Restoration',
           productVersion: '20261028-m3',
           autoSyncPersistentDataPath: true,
+          instantiateWasm: function(imports, successCallback) {
+            WebAssembly.instantiate(wasmBytes, imports).then(function(output) {
+              successCallback(output.instance, output.module);
+            }).catch(function(err) {
+              fail('WebAssembly compilation failed: ' + err);
+            });
+            return {};
+          },
           showBanner: (message, type) => { if (type === 'error') fail(message); else console.warn(message); }
         };
 
