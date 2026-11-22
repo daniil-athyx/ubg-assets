@@ -159,15 +159,34 @@
 
         async function initWasm() {
             try {
-                const res1 = await fetch(buildUrl + "/V1.7.5.wasm.part1");
-                if (res1.ok) {
-                    const res2 = await fetch(buildUrl + "/V1.7.5.wasm.part2");
-                    if (res2.ok) {
-                        const b1 = await res1.blob();
-                        const b2 = await res2.blob();
-                        const combined = new Blob([b1, b2], { type: "application/wasm" });
-                        config.codeUrl = URL.createObjectURL(combined);
-                    }
+                var part1Url = buildUrl + "/V1.7.5.wasm.part1";
+                var part2Url = buildUrl + "/V1.7.5.wasm.part2";
+                if (window.parent && window.parent.AthyxCdn) {
+                    var cdnBase = "https://cdn.jsdelivr.net/gh/daniil-athyx/OG-Noomiclone-Web-Port@main/";
+                    cdnBase = window.parent.AthyxCdn.rewriteUrl(cdnBase);
+                    part1Url = cdnBase + "Build/V1.7.5.wasm.part1";
+                    part2Url = cdnBase + "Build/V1.7.5.wasm.part2";
+                }
+                const [res1, res2] = await Promise.all([
+                    fetch(part1Url),
+                    fetch(part2Url)
+                ]);
+                if (res1.ok && res2.ok) {
+                    const b1 = await res1.arrayBuffer();
+                    const b2 = await res2.arrayBuffer();
+                    const combined = new Uint8Array(b1.byteLength + b2.byteLength);
+                    combined.set(new Uint8Array(b1), 0);
+                    combined.set(new Uint8Array(b2), b1.byteLength);
+
+                    config.wasmBinary = combined.buffer;
+                    config.instantiateWasm = function(imports, successCallback) {
+                        WebAssembly.instantiate(combined.buffer, imports).then(function(output) {
+                            successCallback(output.instance, output.module);
+                        }).catch(function(err) {
+                            console.error("Custom instantiateWasm error:", err);
+                        });
+                        return {};
+                    };
                 }
             } catch (e) {
                 console.warn("Using default wasm url:", e);
