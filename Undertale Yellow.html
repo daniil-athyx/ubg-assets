@@ -1237,7 +1237,9 @@
 
         const originalOpen = XMLHttpRequest.prototype.open;
         XMLHttpRequest.prototype.open = function(method, url, ...rest) {
-          if (url.includes("game.unx")) url = blobUrl;
+          if (typeof url === "string" && (url.endsWith("game.unx") || url.includes("game.unx"))) {
+            url = blobUrl;
+          }
           return originalOpen.call(this, method, url, ...rest);
         };
 
