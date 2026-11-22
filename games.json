@@ -465,6 +465,11 @@
     "icon": "icons/noomi_clone.webp"
   },
   {
+    "name": "NoomiCheems Classic",
+    "path": "NoomiCheems Classic.html",
+    "icon": "icons/noomicheems-classic.webp"
+  },
+  {
     "name": "Obby 99% Will Lose",
     "path": "Obby 99% will lose.html",
     "icon": "icons/obby.webp"
