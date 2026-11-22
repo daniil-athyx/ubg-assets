@@ -15,6 +15,33 @@
     <script type="text/javascript">
       var BASE_URL = "https://cdn.jsdelivr.net/gh/daniil-athyx/athyx-game-lib@main/Vex%204/";
       var gameName = "vex-4.min.js";
+      window.fbrqLA = false;
+      window.fbrqBD = 0;
+      window.playBtn = false;
+      window.fbrqSA = false;
+      window.azCP = false;
+      window.gdsdk = {
+        showAd: function() { return Promise.resolve(); },
+        showBanner: function() { return Promise.resolve(); },
+        preloadAd: function() { return Promise.resolve(); },
+        init: function() { return Promise.resolve(); },
+        sendEvent: function() {},
+        getSession: function() { return { location: { parentDomain: window.location.host } }; }
+      };
+      window.GD_OPTIONS = {
+        gameId: "c1b6a9a585114f7c8c8b6f7e2d3a4b5c",
+        advertisementSettings: { autoplay: false },
+        onEvent: function() {}
+      };
+      var _azerionIntegration = {
+        rType: "none",
+        af: false,
+        sa: true,
+        la: "false",
+        bd: 0,
+        playBtn: "false",
+        cp: false
+      };
 
       function addScript(src, buster, callback) {
         var s = document.createElement("script");
@@ -28,6 +55,13 @@
 
       addScript("version.js", Date.now(), function () {
         addScript(gameName, version, function () {
+          var loader = document.getElementById("loader");
+          if (loader) loader.style.display = "none";
+          if (typeof Fabrique !== "undefined" && Fabrique.AdHandler && Fabrique.AdHandler.prototype) {
+            Fabrique.AdHandler.prototype.showAd = function(onComplete) {
+              if (typeof onComplete === "function") onComplete();
+            };
+          }
           var game = new Vex4.Game();
         });
       });
