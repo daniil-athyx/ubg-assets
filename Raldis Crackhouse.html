@@ -99,8 +99,8 @@
         return parts;
       }
       (async () => {
-        const dataParts = getParts("Build/BALDI.data", 10);
-        const wasmParts = getParts("Build/BALDI.wasm", 2);
+        const dataParts = getParts("Build/BALDI.data", 14);
+        const wasmParts = getParts("Build/BALDI.wasm", 3);
         const [dataUrl, wasmUrl] = await Promise.all([
           mergeFiles(dataParts),
           mergeFiles(wasmParts),
