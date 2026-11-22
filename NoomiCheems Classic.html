@@ -267,6 +267,12 @@
         const res = await fetch(url);
         if (!res.ok) throw new Error('Failed to load ' + fileList[i] + ' (' + res.status + ')');
         const buf = await res.arrayBuffer();
+        if (buf.byteLength < 16) throw new Error('Invalid chunk size for ' + fileList[i]);
+        const head = new Uint8Array(buf, 0, Math.min(buf.byteLength, 16));
+        const headStr = String.fromCharCode.apply(null, head);
+        if (headStr.includes('<!DOCTYPE') || headStr.includes('<html')) {
+          throw new Error('CDN returned HTML error page for ' + fileList[i]);
+        }
         buffers.push(buf);
         const progress = startPct + ((i + 1) / fileList.length) * (endPct - startPct);
         document.getElementById('progress').value = progress / 100;
@@ -282,8 +288,46 @@
       return combined;
     }
 
+    const assetCache = new Map();
+    async function preloadAsset(relPath) {
+      try {
+        const url = BASE_LIB_URL + relPath;
+        const res = await fetch(url);
+        if (res.ok) {
+          const buf = await res.arrayBuffer();
+          assetCache.set(relPath, buf);
+          assetCache.set(url, buf);
+          const fname = relPath.split('/').pop();
+          assetCache.set(fname, buf);
+        }
+      } catch (e) {
+        console.warn('Preload skipped:', relPath, e);
+      }
+    }
+
     async function initNoomiCheems() {
       try {
+        const lang = (navigator.language || 'en').slice(0, 2).toLowerCase();
+        const langBundles = {
+          ru: 'localization-string-tables-russian(ru)_assets_all.bundle',
+          fr: 'localization-string-tables-french(fr)_assets_all.bundle',
+          de: 'localization-string-tables-german(de)_assets_all.bundle',
+          es: 'localization-string-tables-spanish(es)_assets_all.bundle',
+          it: 'localization-string-tables-italian(it)_assets_all.bundle',
+          uk: 'localization-string-tables-ukrainian(uk)_assets_all.bundle',
+        };
+        const userBundle = langBundles[lang] || 'localization-string-tables-english(en)_assets_all.bundle';
+        const preloadList = [
+          '20261028-m3/StreamingAssets/aa/settings.json',
+          '20261028-m3/StreamingAssets/aa/catalog.bin',
+          '20261028-m3/StreamingAssets/aa/WebGL/localization-locales_assets_all.bundle',
+          '20261028-m3/StreamingAssets/aa/WebGL/localization-assets-shared_assets_all.bundle',
+          '20261028-m3/StreamingAssets/aa/WebGL/a76ddee18b2c5b84377431e62512bd34_monoscripts_26df360b08ad7bf1b00d0454a51ddc0d.bundle',
+          '20261028-m3/StreamingAssets/aa/WebGL/' + userBundle,
+          '20261028-m3/StreamingAssets/aa/WebGL/localization-string-tables-english(en)_assets_all.bundle'
+        ];
+        Promise.all(preloadList.map(preloadAsset)).catch(() => {});
+
         const dataBytes = await fetchChunks(DATA_CHUNKS, 'Downloading physics & map data', 0, 20);
         const dataBlobUrl = URL.createObjectURL(new Blob([dataBytes], { type: 'application/octet-stream' }));
 
@@ -296,7 +340,7 @@
         const config = {
           dataUrl: dataBlobUrl,
           frameworkUrl: BASE_LIB_URL + '20261028-m3/Web.framework.js',
-          codeUrl: dataBlobUrl,
+          codeUrl: wasmBlobUrl,
           streamingAssetsUrl: BASE_LIB_URL + '20261028-m3/StreamingAssets',
           companyName: 'LocalRecovery',
           productName: 'NoomiCheems Classic Local Restoration',
@@ -310,8 +354,51 @@
             });
             return {};
           },
+          fetchWithProgress: function(resource, init) {
+            const urlStr = typeof resource === 'string' ? resource : (resource?.url || '');
+            if (urlStr === dataBlobUrl || urlStr.includes('Web.data')) {
+              return Promise.resolve({
+                ok: true,
+                status: 200,
+                headers: new Headers({
+                  'Content-Type': 'application/octet-stream',
+                  'Content-Length': String(dataBytes.byteLength)
+                }),
+                parsedBody: dataBytes
+              });
+            }
+            for (const [key, buf] of assetCache.entries()) {
+              if (urlStr.endsWith(key) || urlStr.includes(key)) {
+                return Promise.resolve({
+                  ok: true,
+                  status: 200,
+                  headers: new Headers({
+                    'Content-Type': 'application/octet-stream',
+                    'Content-Length': String(buf.byteLength)
+                  }),
+                  parsedBody: new Uint8Array(buf)
+                });
+              }
+            }
+            return fetch(resource, init).then(function(res) {
+              return window.createUnityInstance ? (Module?.readBodyWithProgress?.(res, init?.onProgress, init?.enableStreamingDownload) || res) : res;
+            });
+          },
           showBanner: (message, type) => { if (type === 'error') fail(message); else console.warn(message); }
         };
+
+        function tryDismissConsole() {
+          const rect = canvas.getBoundingClientRect();
+          if (rect.width > 0 && rect.height > 0) {
+            const cx = rect.left + rect.width * 0.96;
+            const cy = rect.top + rect.height * 0.88;
+            canvas.dispatchEvent(new MouseEvent('mousedown', { clientX: cx, clientY: cy, bubbles: true }));
+            canvas.dispatchEvent(new MouseEvent('mouseup', { clientX: cx, clientY: cy, bubbles: true }));
+            canvas.dispatchEvent(new MouseEvent('click', { clientX: cx, clientY: cy, bubbles: true }));
+          }
+        }
+        setTimeout(tryDismissConsole, 2500);
+        setTimeout(tryDismissConsole, 5000);
 
         createUnityInstance(canvas, config, p => {
           document.getElementById('progress').value = 0.85 + (p * 0.15);
