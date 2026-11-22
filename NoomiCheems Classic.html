@@ -299,6 +299,8 @@
           assetCache.set(url, buf);
           const fname = relPath.split('/').pop();
           assetCache.set(fname, buf);
+          assetCache.set(decodeURIComponent(fname), buf);
+          assetCache.set(encodeURIComponent(fname), buf);
         }
       } catch (e) {
         console.warn('Preload skipped:', relPath, e);
@@ -307,26 +309,26 @@
 
     async function initNoomiCheems() {
       try {
-        const lang = (navigator.language || 'en').slice(0, 2).toLowerCase();
-        const langBundles = {
-          ru: 'localization-string-tables-russian(ru)_assets_all.bundle',
-          fr: 'localization-string-tables-french(fr)_assets_all.bundle',
-          de: 'localization-string-tables-german(de)_assets_all.bundle',
-          es: 'localization-string-tables-spanish(es)_assets_all.bundle',
-          it: 'localization-string-tables-italian(it)_assets_all.bundle',
-          uk: 'localization-string-tables-ukrainian(uk)_assets_all.bundle',
-        };
-        const userBundle = langBundles[lang] || 'localization-string-tables-english(en)_assets_all.bundle';
         const preloadList = [
           '20261028-m3/StreamingAssets/aa/settings.json',
           '20261028-m3/StreamingAssets/aa/catalog.bin',
+          '20261028-m3/StreamingAssets/aa/catalog.hash',
           '20261028-m3/StreamingAssets/aa/WebGL/localization-locales_assets_all.bundle',
+          '20261028-m3/StreamingAssets/aa/WebGL/localization-locales_assets_all_95bb69459d055e091b4853acd5828490.bundle',
           '20261028-m3/StreamingAssets/aa/WebGL/localization-assets-shared_assets_all.bundle',
+          '20261028-m3/StreamingAssets/aa/WebGL/localization-assets-shared_assets_all_0058b3105e34f3dec5ead5cb3473dae5.bundle',
           '20261028-m3/StreamingAssets/aa/WebGL/a76ddee18b2c5b84377431e62512bd34_monoscripts_26df360b08ad7bf1b00d0454a51ddc0d.bundle',
-          '20261028-m3/StreamingAssets/aa/WebGL/' + userBundle,
-          '20261028-m3/StreamingAssets/aa/WebGL/localization-string-tables-english(en)_assets_all.bundle'
+          '20261028-m3/StreamingAssets/aa/WebGL/localization-string-tables-english(en)_assets_all.bundle',
+          '20261028-m3/StreamingAssets/aa/WebGL/localization-string-tables-english(en)_assets_all_7a57da0a816341e2cabc290ab7f35282.bundle',
+          '20261028-m3/StreamingAssets/aa/WebGL/localization-string-tables-russian(ru)_assets_all.bundle',
+          '20261028-m3/StreamingAssets/aa/WebGL/localization-string-tables-russian(ru)_assets_all_317b0c6a3f682b4b8a3cd81aef21bf35.bundle',
+          '20261028-m3/StreamingAssets/aa/WebGL/localization-string-tables-french(fr)_assets_all.bundle',
+          '20261028-m3/StreamingAssets/aa/WebGL/localization-string-tables-german(de)_assets_all.bundle',
+          '20261028-m3/StreamingAssets/aa/WebGL/localization-string-tables-spanish(es)_assets_all.bundle',
+          '20261028-m3/StreamingAssets/aa/WebGL/localization-string-tables-italian(it)_assets_all.bundle',
+          '20261028-m3/StreamingAssets/aa/WebGL/localization-string-tables-ukrainian(uk)_assets_all.bundle'
         ];
-        Promise.all(preloadList.map(preloadAsset)).catch(() => {});
+        await Promise.all(preloadList.map(preloadAsset));
 
         const dataBytes = await fetchChunks(DATA_CHUNKS, 'Downloading physics & map data', 0, 20);
         const dataBlobUrl = URL.createObjectURL(new Blob([dataBytes], { type: 'application/octet-stream' }));
@@ -368,8 +370,9 @@
                 parsedBody: dataBytes
               });
             }
+            const cleanUrl = decodeURIComponent(urlStr);
             for (const [key, buf] of assetCache.entries()) {
-              if (urlStr.endsWith(key) || urlStr.includes(key)) {
+              if (urlStr.endsWith(key) || cleanUrl.endsWith(key) || urlStr.includes(key) || cleanUrl.includes(key)) {
                 return Promise.resolve({
                   ok: true,
                   status: 200,
@@ -381,24 +384,35 @@
                 });
               }
             }
-            return fetch(resource, init).then(function(res) {
-              return window.createUnityInstance ? (Module?.readBodyWithProgress?.(res, init?.onProgress, init?.enableStreamingDownload) || res) : res;
-            });
+            return null;
           },
           showBanner: (message, type) => { if (type === 'error') fail(message); else console.warn(message); }
         };
 
         function tryDismissConsole() {
+          try {
+            window.dispatchEvent(new KeyboardEvent('keydown', { key: '`', code: 'Backquote', keyCode: 192, which: 192, bubbles: true }));
+            window.dispatchEvent(new KeyboardEvent('keyup', { key: '`', code: 'Backquote', keyCode: 192, which: 192, bubbles: true }));
+            canvas.dispatchEvent(new KeyboardEvent('keydown', { key: '`', code: 'Backquote', keyCode: 192, which: 192, bubbles: true }));
+            canvas.dispatchEvent(new KeyboardEvent('keyup', { key: '`', code: 'Backquote', keyCode: 192, which: 192, bubbles: true }));
+          } catch(e) {}
           const rect = canvas.getBoundingClientRect();
           if (rect.width > 0 && rect.height > 0) {
-            const cx = rect.left + rect.width * 0.96;
-            const cy = rect.top + rect.height * 0.88;
-            canvas.dispatchEvent(new MouseEvent('mousedown', { clientX: cx, clientY: cy, bubbles: true }));
-            canvas.dispatchEvent(new MouseEvent('mouseup', { clientX: cx, clientY: cy, bubbles: true }));
-            canvas.dispatchEvent(new MouseEvent('click', { clientX: cx, clientY: cy, bubbles: true }));
+            // Click Close button in console
+            const pts = [
+              [rect.left + rect.width * 0.96, rect.top + rect.height * 0.88],
+              [rect.left + rect.width * 0.40, rect.top + rect.height * 0.95],
+              [rect.left + 50, rect.top + rect.height * 0.80]
+            ];
+            for (const [cx, cy] of pts) {
+              canvas.dispatchEvent(new MouseEvent('mousedown', { clientX: cx, clientY: cy, bubbles: true }));
+              canvas.dispatchEvent(new MouseEvent('mouseup', { clientX: cx, clientY: cy, bubbles: true }));
+              canvas.dispatchEvent(new MouseEvent('click', { clientX: cx, clientY: cy, bubbles: true }));
+            }
           }
         }
-        setTimeout(tryDismissConsole, 2500);
+        setTimeout(tryDismissConsole, 1500);
+        setTimeout(tryDismissConsole, 3000);
         setTimeout(tryDismissConsole, 5000);
 
         createUnityInstance(canvas, config, p => {
