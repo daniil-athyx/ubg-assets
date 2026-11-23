@@ -465,9 +465,9 @@
     "icon": "icons/noomi_clone.webp"
   },
   {
-    "name": "NoomiCheems Classic",
+    "name": "NoomiCheems",
     "path": "NoomiCheems.html",
-    "icon": "icons/noomicheems-classic.webp"
+    "icon": "icons/noomicheems.webp"
   },
   {
     "name": "NoomiClone Beta",
