@@ -8,8 +8,6 @@
 	<title>NoomiClone Beta</title>
 	<link rel="shortcut icon" href="TemplateData/favicon.ico">
 	<link rel="stylesheet" href="TemplateData/style.css">
-	<script src="TemplateData/UnityProgress.js"></script>
-	<script src="Build/UnityLoader.js"></script>
 	<style>
 		*::-webkit-scrollbar, html::-webkit-scrollbar, body::-webkit-scrollbar {
 			display: none !important;
@@ -42,9 +40,48 @@
 		}
 	</style>
 	<script>
-		var unityInstance = UnityLoader.instantiate("unityContainer", "Build/webgl-4.json", {
-			onProgress: UnityProgress
-		});
+		function UnityProgress(unityInstance, progress) {
+			if (!unityInstance.Module) return;
+			if (!unityInstance.logo) {
+				unityInstance.logo = document.createElement("div");
+				unityInstance.logo.className = "logo " + (unityInstance.Module.splashScreenStyle || "Dark");
+				unityInstance.container.appendChild(unityInstance.logo);
+			}
+			if (!unityInstance.progress) {    
+				unityInstance.progress = document.createElement("div");
+				unityInstance.progress.className = "progress " + (unityInstance.Module.splashScreenStyle || "Dark");
+				unityInstance.progress.empty = document.createElement("div");
+				unityInstance.progress.empty.className = "empty";
+				unityInstance.progress.appendChild(unityInstance.progress.empty);
+				unityInstance.progress.full = document.createElement("div");
+				unityInstance.progress.full.className = "full";
+				unityInstance.progress.appendChild(unityInstance.progress.full);
+				unityInstance.container.appendChild(unityInstance.progress);
+			}
+			unityInstance.progress.full.style.width = (100 * progress) + "%";
+			unityInstance.progress.empty.style.width = (100 * (1 - progress)) + "%";
+			if (progress >= 1) {
+				if (unityInstance.logo) unityInstance.logo.style.display = "none";
+				if (unityInstance.progress) unityInstance.progress.style.display = "none";
+			}
+		}
+	</script>
+	<script src="Build/UnityLoader.js"></script>
+	<script>
+		function initGame() {
+			if (typeof UnityLoader !== "undefined" && typeof UnityLoader.instantiate === "function") {
+				window.unityInstance = UnityLoader.instantiate("unityContainer", "Build/webgl-4.json", {
+					onProgress: typeof UnityProgress === "function" ? UnityProgress : function() {}
+				});
+			} else {
+				setTimeout(initGame, 50);
+			}
+		}
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", initGame);
+		} else {
+			initGame();
+		}
 	</script>
 </head>
 <body>
