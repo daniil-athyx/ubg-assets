@@ -490,11 +490,6 @@
     "icon": "icons/orange_roulette.webp"
   },
   {
-    "name": "Osu",
-    "path": "Osu.html",
-    "icon": "icons/osu.webp"
-  },
-  {
     "name": "OvO",
     "path": "OvO.html",
     "icon": "icons/ovo.webp"
